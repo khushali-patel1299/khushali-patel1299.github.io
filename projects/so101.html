@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SO-101 robot arm: from teleoperation to a learned grasp — Khushali Patel</title>
+<meta name="description" content="Forward and inverse kinematics, MuJoCo simulation, hardware pick-and-place and SAC reinforcement learning on the SO-101 robot arm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/icons.css">
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-glow" aria-hidden="true"></div>
+
+<ul class="social-rail" aria-label="Contact links"><li><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+<div class="page">
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="../index.html"><i aria-hidden="true"></i>Khushali Patel</a>
+    <div class="nav-right">
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="../index.html#projects">All projects</a></li>
+        <li class="hide-sm"><a href="#roadmap">Roadmap</a></li>
+        <li class="hide-sm"><a href="#results">Results</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-social"><li class=""><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li class=""><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li class=""><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li class="opt"><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <!-- ============================== HERO ============================== -->
+  <section class="case-hero">
+    <div class="wrap">
+      <a class="back" href="../index.html#projects">← All projects</a>
+      <p class="topic" style="margin-top:28px">/projects/so101</p>
+      <h1>SO-101 robot arm: from teleoperation to a <span class="scr" id="scramble">learned grasp</span></h1>
+      <p class="lede">Five stages over one semester: get the arm moving, model it in simulation, solve its kinematics, run pick-and-place on the real robot, then train a reinforcement learning policy to do the grasp itself.</p>
+      <dl class="facts">
+        <div><dt>Course</dt><dd>ME 297 Embodied Intelligence &amp; Robot Learning, SJSU, Fall 2026</dd></div>
+        <div><dt>Robot</dt><dd>SO-101 6-DOF arm (LeRobot), leader + follower pair</dd></div>
+        <div><dt>Stack</dt><dd>Python, MuJoCo, NumPy, Stable-Baselines3, LeRobot, MATLAB Simscape</dd></div>
+        <div><dt>Outcome</dt><dd>IK pick-and-place on hardware. SAC lift policy: 10/10 evaluation episodes.</dd></div>
+      </dl>
+      <div class="fit-row reveal" data-maxh="520">
+            <figure class="clip" data-ar="468/724"><video src="../assets/so101/rl_lift.mp4" poster="../assets/so101/rl_lift.jpg" width="468" height="724" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>reinforcement learning · MuJoCo</b> trained SAC policy grasping and lifting</figcaption></figure>
+            <figure class="clip" data-ar="1360/1080"><video src="../assets/so101/ik_hw.mp4" poster="../assets/so101/ik_hw.jpg" width="1360" height="1080" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>inverse kinematics · real arm</b> my IK placing a block in a tray</figcaption></figure>
+          </div>
+    </div>
+  </section>
+
+  <!-- ============================== ROADMAP ============================== -->
+  <section id="roadmap" style="padding-top:48px">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/roadmap</p>
+        <h2>How the project built up</h2>
+        <p class="sub">Each stage reused the code from the one before it. Pick a stage to jump to it.</p>
+      </div>
+      <ol class="roadmap reveal">
+        <li><a href="#stage-1" data-stage-link="stage-1"><span class="node">01</span><h3>Teleoperation</h3><p>Build, calibrate and drive the real arm</p></a></li>
+        <li><a href="#stage-2" data-stage-link="stage-2"><span class="node">02</span><h3>MuJoCo twin</h3><p>Simulated arm with the same commands</p></a></li>
+        <li><a href="#stage-3" data-stage-link="stage-3"><span class="node">03</span><h3>Forward kinematics</h3><p>Joint angles → gripper pose</p></a></li>
+        <li><a href="#stage-4" data-stage-link="stage-4"><span class="node">04</span><h3>Inverse kinematics</h3><p>Gripper target → joint angles</p></a></li>
+        <li><a href="#stage-5" data-stage-link="stage-5"><span class="node">05</span><h3>RL grasp and lift</h3><p>A learned policy replaces the script</p></a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================== STAGES ============================== -->
+  <section style="padding-top:40px">
+    <div class="wrap stages">
+      <ol class="rail" aria-label="Stages">
+        <li><a href="#stage-1" data-stage-link="stage-1"><span>01</span>Teleoperation</a></li>
+        <li><a href="#stage-2" data-stage-link="stage-2"><span>02</span>MuJoCo twin</a></li>
+        <li><a href="#stage-3" data-stage-link="stage-3"><span>03</span>Forward kinematics</a></li>
+        <li><a href="#stage-4" data-stage-link="stage-4"><span>04</span>Inverse kinematics</a></li>
+        <li><a href="#stage-5" data-stage-link="stage-5"><span>05</span>RL grasp and lift</a></li>
+        <li><a href="#results" data-stage-link="results"><span>→</span>Results</a></li>
+      </ol>
+
+      <div>
+        <!-- ---------- STAGE 1 ---------- -->
+        <article class="stage" id="stage-1">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">01</span><h2>Build, calibrate and teleoperate</h2></div>
+            <p class="goal">Get the real leader and follower arms working before writing any control code.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip" data-ar="640/360"><video src="../assets/so101/teleop.mp4" poster="../assets/so101/teleop.jpg" width="640" height="360" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>teleoperation · real arms</b> my hand on the leader (right) drives the follower to pick up a marker and drop it in the tray</figcaption></figure>
+            <figure class="clip" data-ar="900/760"><video src="../assets/so101/fk_simulink.mp4" poster="../assets/so101/fk_simulink.jpg" width="900" height="760" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>MATLAB</b> URDF in Simscape Multibody</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>I set up the SO-101 leader and follower arms with Hugging Face's LeRobot library, calibrated each joint's range, and teleoperated the follower by moving the leader by hand. The leader uses lower-reduction servos so it moves easily by hand, while the follower's are stronger. Alongside that, I imported the arm's URDF into MATLAB Simscape to see the kinematic chain move before touching the real robot.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Leader–follower teleoperation</li><li>Servo calibration</li><li>Serial-bus servos</li><li>URDF</li><li>Simscape Multibody</li></ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 2 ---------- -->
+        <article class="stage" id="stage-2">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">02</span><h2>A MuJoCo twin of the arm</h2></div>
+            <p class="goal">A physics simulation I could break safely, commanded the same way as the real robot.</p>
+          </div>
+          <div class="fit-row reveal" data-maxh="460">
+            <figure class="clip" data-ar="466/716"><video src="../assets/so101/mujoco_setup.mp4" poster="../assets/so101/mujoco_setup.jpg" width="466" height="716" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>MuJoCo</b> all six joints moving to a target pose and back</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>I loaded the SO-101 MJCF model into MuJoCo and wrote the layer between how the real robot is commanded (joint angles in degrees, gripper 0–100) and what MuJoCo's position actuators expect (radians). On top of that I wrote <code>move_to_pose</code>, which interpolates linearly in joint space over a set time while stepping the physics in real time, and <code>hold_position</code>. Every later stage reuses these two functions.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>MJCF models</li><li>Position actuators</li><li>Joint-space interpolation</li><li>Real-time physics stepping</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The real robot's API and MuJoCo's actuators use different units, so every script risked mixing degrees, radians and gripper percentages.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>One conversion module used everywhere. Simulation and hardware scripts take the same pose dictionaries, so a pose tested in sim runs unchanged on the arm.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 3 ---------- -->
+        <article class="stage" id="stage-3">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">03</span><h2>Forward kinematics and scripted pick-and-place</h2></div>
+            <p class="goal">Know exactly where the gripper is for any set of joint angles, then use that to plan a pick-and-place.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip" data-ar="470/720"><video src="../assets/so101/fk_sim.mp4" poster="../assets/so101/fk_sim.jpg" width="470" height="720" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>MuJoCo</b> red = pick, green = place, both placed by FK</figcaption></figure>
+            <figure class="clip" data-ar="1280/720"><video src="../assets/so101/fk_hw.mp4" poster="../assets/so101/fk_hw.jpg" width="1280" height="720" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>hardware</b> the same scripted sequence on the real arm</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>Forward kinematics as a chain of 4×4 homogeneous transforms, one per joint. Each link's fixed offset and orientation come straight from the body position and quaternion in the MJCF file, followed by a rotation about that joint's z-axis. The chain ends at the <code>gripperframe</code> site between the fingers.</p>
+            <pre class="code">T_gripper = T_shoulder · T_upperArm · T_lowerArm · T_wrist · T_gripper · T_tip
+T_i       = [ R(q_i)·Rz(θ_i)   p_i ]      q_i, p_i read from the MJCF
+            [ 0  0  0          1   ]</pre>
+            <p>I used it to draw ghost target cubes exactly where the gripper would close, then scripted grasp → lift → transit → lower → release in simulation and ran the same joint sequence on the real arm.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Homogeneous transforms</li><li>Quaternion → rotation matrix</li><li>Kinematic chains</li><li>Waypoint sequencing</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The FK reference point sits on the fixed fingertip, so a target cube drawn exactly there didn't sit between the jaws.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Shifted each target 1 cm outward along the arm's pan direction, which lines it up with the closing jaws.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>Moving straight from the pick pose to the place pose would sweep the gripper low across the table.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Added safe waypoints: lift to shoulder level, pan across, then lower at the place pose.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 4 ---------- -->
+        <article class="stage" id="stage-4">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">04</span><h2>Closed-form inverse kinematics</h2></div>
+            <p class="goal">Go from "put the gripper here" to joint angles with geometry instead of an iterative solver.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip" data-ar="468/720"><video src="../assets/so101/ik_sim.mp4" poster="../assets/so101/ik_sim.jpg" width="468" height="720" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>MuJoCo</b> reaching random targets</figcaption></figure>
+            <figure class="clip" data-ar="1360/1080"><video src="../assets/so101/ik_hw.mp4" poster="../assets/so101/ik_hw.jpg" width="1360" height="1080" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>hardware</b> IK pick-and-place into a tray</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>A geometric solver for a top-down grasp, solved one joint at a time:</p>
+            <ol class="note" style="color:#C3CBD4;font-size:16px;line-height:1.65;padding-left:22px">
+              <li><b>Shoulder pan (θ₁):</b> project the target onto the ground plane, measured from the pan axis, which sits 3.9 cm in front of the base origin.</li>
+              <li><b>Wrist position:</b> for a top-down grasp the wrist sits directly above the target by the gripper's length, 16.5 cm.</li>
+              <li><b>Shoulder lift and elbow (θ₂, θ₃):</b> law of cosines on the shoulder–elbow–wrist triangle. The upper arm has a 2.8 cm kink, handled as a fixed angle offset.</li>
+              <li><b>Wrist flex (θ₄ = 90° − θ₂ − θ₃):</b> keeps the gripper pointing straight down.</li>
+              <li><b>Wrist roll (θ₅ = θ₁):</b> keeps the jaws aligned with the block.</li>
+            </ol>
+            <p>I tested it against random targets in simulation, then wrapped it in pick and place routines (hover, descend, close, lift, then the reverse at the drop point) and ran them on the real arm.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Geometric IK</li><li>Law of cosines</li><li>Workspace analysis</li><li>Checking IK with FK</li><li>Sim-to-real validation</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>Random test targets outside the arm's reach pushed the law-of-cosines term past 1. <code>arccos</code> returned NaN, MuJoCo received NaN commands and flagged the simulation as unstable.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Reachability became part of the IK call: a NaN solution means unreachable, so the target is rejected and the arm keeps its last command.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>Checked against forward kinematics, the analytic IK missed the requested point by about 0.7 cm in x and 1.0 cm in z.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>A 3-iteration correction loop: solve IK, use FK to see where the gripper actually lands, shift the request by the error, solve again.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>Close to the base, the solution asks the wrist to bend past its joint limit, and the actuator silently clamps it.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Bounded the working area (x ≥ 10 cm, z ≤ 10.5 cm). Clamping inside the IK was tried and tilted the gripper, so it was left out.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 5 ---------- -->
+        <article class="stage" id="stage-5">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">05</span><h2>Reinforcement learning: grasp and lift</h2></div>
+            <p class="goal">Replace the scripted sequence with a policy that learns to grasp a 3 cm cube and hold it above 8 cm.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip" data-ar="468/724"><video src="../assets/so101/rl_lift.mp4" poster="../assets/so101/rl_lift.jpg" width="468" height="724" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>MuJoCo</b> trained policy, 700k steps</figcaption></figure>
+            <figure class="clip white" data-ar="1774/1183"><img src="../assets/so101/rl_curves.png" width="1774" height="1183" alt="evaluation reward, success rate and entropy coefficient over 700k steps" loading="lazy"><figcaption>evaluation reward, success rate and entropy coefficient over 700k steps</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>Attempt 1: my own environment</h3>
+            <p>I wrote a Gymnasium environment around my own IK. The agent outputs a small Cartesian move (dx, dy, dz) plus open or close, the IK turns that into joint commands, and a 13-number observation gives the gripper position, the cube's position and orientation, and the vector to the grasp point. I trained it with SAC from Stable-Baselines3.</p>
+            <p>Before any training, a hand-coded expert policy ran through the same environment to prove the task was solvable. That caught physics problems that would otherwise have looked like the RL failing.</p>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The agent learned to close the gripper early and press down on top of the cube.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>A gripper gate: closing is only allowed at the grasp point beside the cube, or while already holding it.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>It also collected reward for corner pinches and for cubes wedged above the fingers.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>A "good grasp" test: both jaws touching, cube upright (tilt under 20°), faces aligned (yaw error under 15°), centred between the pads. Lift rewards only pay out on a good grasp.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>Even a correct grasp slowly let the cube creep out of the jaws.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Swept six contact settings using the scripted expert. An elliptic friction cone, impratio 10, 5 no-slip iterations and full 6-D contact on the cube held it.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>The policy learned to end episodes early on purpose. Failures were flagged as time-limit truncations, so SAC kept bootstrapping value through them and quitting cost nothing.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Made failures real terminal states with a −5 penalty. Only the step limit counts as a truncation.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>In one 700k-step run the policy "picked" the cube with the fingers passing through it, which is a contact-geometry problem, not a learning one.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>For the final training I moved to an environment with explicit finger-pad collision boxes.</p></div></li>
+            </ul>
+
+            <h3>Final run: a tuned environment</h3>
+            <p>For the final policy I trained SAC on the open-source <a href="https://github.com/ggand0/pick-101">pick-101</a> SO-101 lift environment. It has finger-pad collision geometry, a dense staged reward, a top-down grasp with the wrist locked, and episodes that start with the gripper open just above the cube. I wrote a faster training config: 700k steps instead of 1M, evaluation every 10k steps, checkpoints every 25k, and a smaller replay buffer. Training took about 3 hours on my laptop.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Soft Actor-Critic</li><li>Reward shaping</li><li>Gymnasium environments</li><li>Terminated vs. truncated</li><li>Contact physics tuning</li><li>Curriculum start states</li><li>Observation normalization</li></ul>
+          </div>
+        </article>
+
+        <!-- ---------- RESULTS ---------- -->
+        <article class="stage" id="results" style="padding-bottom:24px">
+          <div class="reveal">
+            <p class="topic">/results</p>
+            <h2>Results</h2>
+            <p class="goal">The arm went from hand-driven to a learned grasp-and-lift in one semester, with a hardware test at each kinematics stage.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><span class="num" data-count="10/10">10/10</span><span>evaluation episodes lifted the cube above 8 cm and held it, at 700k steps</span></div>
+            <div class="stat"><span class="num" data-count="~120k">~120k</span><span>training steps before an evaluation round first hit 100% success</span></div>
+            <div class="stat"><span class="num" data-count="~3 h">~3 h</span><span>to train 700k steps on a laptop</span></div>
+          </div>
+          <p class="note reveal">Success is measured over 10 deterministic evaluation episodes. Averaged across the later evaluations, success sits around 90%, so a single 10/10 round shouldn't be read as perfect reliability.</p>
+          <div class="next reveal">
+            <a class="back" href="../index.html#projects">← All projects</a>
+            <a class="btn ghost" href="../index.html#contact">Talk to me about this project</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Khushali Patel · Robotics software engineering portfolio</div>
+</footer>
+</div>
+<script src="../js/site.js"></script>
+</body>
+</html>

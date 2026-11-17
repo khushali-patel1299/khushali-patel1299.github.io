@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Landing a rocket four ways: PD, LQR, MPC and reinforcement learning — Khushali Patel</title>
+<meta name="description" content="Autonomous vertical rocket landing: linearized model, polynomial trajectories with cascade PD, finite-horizon LQR, constrained MPC with a hand-written ADMM solver, and residual SAC reinforcement learning, all in MATLAB.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/icons.css">
+<style>
+  .sim{position:relative;margin:28px 0 0;background:radial-gradient(120% 90% at 50% 100%,#0F1A1E 0%,var(--carbon) 60%);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+  .sim canvas{display:block;width:100%;height:auto;aspect-ratio:21/9}
+  @media (max-width:700px){.sim canvas{aspect-ratio:4/3}}
+  .sim .hud .bl{gap:22px}
+  table.cmp{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums;margin:6px 0 8px;background:var(--carbon);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+  table.cmp th,table.cmp td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule)}
+  table.cmp th{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--dim);background:var(--graphite)}
+  table.cmp td.n{text-align:right;white-space:nowrap}
+  table.cmp tr.win td{color:var(--lime)}
+  table.cmp tr:last-child td{border-bottom:0}
+  .tblwrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-glow" aria-hidden="true"></div>
+<ul class="social-rail" aria-label="Contact links"><li><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+<div class="page">
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="../index.html"><i aria-hidden="true"></i>Khushali Patel</a>
+    <div class="nav-right">
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="../index.html#projects">All projects</a></li>
+        <li class="hide-sm"><a href="#roadmap">Roadmap</a></li>
+        <li class="hide-sm"><a href="#results">Results</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-social"><li class=""><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li class=""><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li class=""><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li class="opt"><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <!-- ============================== HERO ============================== -->
+  <section class="case-hero">
+    <div class="wrap">
+      <a class="back" href="../index.html#projects">← All projects</a>
+      <p class="topic" style="margin-top:28px">/projects/rocket-landing</p>
+      <h1>Landing a rocket four ways: <span class="scr" id="scramble">PD, LQR, MPC, RL</span></h1>
+      <p class="lede">A 30-tonne booster falls from about 500 m with four throttleable engines and 50 seconds to land upright on a pad. I derived its model, then landed it with cascade PD, optimal LQR, constrained MPC and reinforcement learning, each building on the last, and compared what each one actually buys you.</p>
+      <dl class="facts">
+        <div><dt>Course</dt><dd>ME 297 midterm, SJSU, Fall 2026</dd></div>
+        <div><dt>System</dt><dd>10-state rocket, 4 engines at 0–2000 kN each, 0.1 s control step</dd></div>
+        <div><dt>Stack</dt><dd>MATLAB, no toolboxes: own QP solver, own neural networks and SAC</dd></div>
+        <div><dt>Outcome</dt><dd>MPC lands a 10 m/s disturbed start within 2.7 mm; clipped LQR misses by 108 km</dd></div>
+      </dl>
+      <figure class="sim">
+        <canvas id="rocket" width="1400" height="600" aria-label="Animated rocket descending along a planned path, tilting to move sideways, landing on the pad."></canvas>
+        <div class="hud" aria-hidden="true">
+          <span class="brk a"></span><span class="brk b"></span><span class="brk c"></span><span class="brk d"></span>
+          <div class="tl">/rocket/state</div>
+          <div class="tr">illustration: planned descent, tilt = ẍ / g</div>
+          <div class="bl"><span>t <b id="r-t">0.0 s</b></span><span>z <b id="r-z">0 m</b></span><span>ż <b id="r-vz">0 m/s</b></span><span>θ <b id="r-th">0.0°</b></span></div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================== ROADMAP ============================== -->
+  <section id="roadmap" style="padding-top:48px">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/roadmap</p>
+        <h2>Each controller builds on the last</h2>
+        <p class="sub">The model feeds the planner, the planner feeds LQR, LQR's cost-to-go sits inside MPC, and MPC is the expert that the RL policy corrects.</p>
+      </div>
+      <ol class="roadmap reveal">
+        <li><a href="#stage-1" data-stage-link="stage-1"><span class="node">01</span><h3>Model</h3><p>Linearize, discretize, verify</p></a></li>
+        <li><a href="#stage-2" data-stage-link="stage-2"><span class="node">02</span><h3>Plan + PD</h3><p>Polynomial paths, cascade PD</p></a></li>
+        <li><a href="#stage-3" data-stage-link="stage-3"><span class="node">03</span><h3>LQR</h3><p>Optimal feedback, Riccati</p></a></li>
+        <li><a href="#stage-4" data-stage-link="stage-4"><span class="node">04</span><h3>MPC</h3><p>Optimal and inside the limits</p></a></li>
+        <li><a href="#stage-5" data-stage-link="stage-5"><span class="node">05</span><h3>Residual RL</h3><p>SAC corrects the MPC</p></a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================== STAGES ============================== -->
+  <section style="padding-top:40px">
+    <div class="wrap stages">
+      <ol class="rail" aria-label="Stages">
+        <li><a href="#stage-1" data-stage-link="stage-1"><span>01</span>Model</a></li>
+        <li><a href="#stage-2" data-stage-link="stage-2"><span>02</span>Plan + PD</a></li>
+        <li><a href="#stage-3" data-stage-link="stage-3"><span>03</span>LQR</a></li>
+        <li><a href="#stage-4" data-stage-link="stage-4"><span>04</span>MPC</a></li>
+        <li><a href="#stage-5" data-stage-link="stage-5"><span>05</span>Residual RL</a></li>
+        <li><a href="#results" data-stage-link="results"><span>→</span>Results</a></li>
+      </ol>
+
+      <div>
+        <!-- ---------- STAGE 1 ---------- -->
+        <article class="stage" id="stage-1">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">01</span><h2>Model the rocket</h2></div>
+            <p class="goal">A linear model that's accurate where the rocket actually flies, and checked rather than trusted.</p>
+          </div>
+          <div class="fit-row reveal" data-maxh="420">
+            <figure class="clip white" data-ar="1100/619"><img src="../assets/rocket/linearization.jpg" width="1100" height="619" alt="linear vs. nonlinear model error as the rocket tilts" loading="lazy"><figcaption>linear vs. nonlinear model error as the rocket tilts</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>From the full nonlinear equations (rotation matrix, Euler's rotation equation) I derived a 10-state linear model about hover: position, velocity, tilt and tilt rate on each side axis, plus height and vertical speed. Inputs are the pitch and roll engine differences and total thrust. It's discretized with forward Euler at 0.1 s, and a thrust-allocation step turns the three inputs back into four engine thrusts.</p>
+            <p>The key structure: the rocket can't push sideways, only lean. So between a steering command and sideways position there's a chain of four integrators, which shapes every controller that follows.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Rigid-body dynamics</li><li>Linearization about hover</li><li>State-space models</li><li>Discretization</li><li>Controllability</li><li>Thrust allocation</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>A hand derivation can hide a missing term or a wrong sign, and the small-angle assumption has to hold somewhere.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Linearized the nonlinear equations numerically by nudging every state and input. It matches the hand-derived matrices to about 10⁻¹⁰, and shows the model is near-exact at the 2° planned tilt but 2 m/s² off vertically at 37°.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>The exam statement had inconsistencies: a force equation subtracting g instead of mg, a sign on the roll axis, and d called both a diameter and a moment arm.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Documented each one and the convention I used, so results stay traceable to the problem as given.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 2 ---------- -->
+        <article class="stage" id="stage-2">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">02</span><h2>Plan a path, track it with PD</h2></div>
+            <p class="goal">A smooth landing timetable, and a controller that follows it without optimization.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1100/663"><img src="../assets/rocket/trajectories.jpg" width="1100" height="663" alt="three starts, planned vs. flown" loading="lazy"><figcaption>three starts, planned vs. flown</figcaption></figure>
+            <figure class="clip white" data-ar="1100/682"><img src="../assets/rocket/ff_vs_pd.jpg" width="1100" height="682" alt="feedforward only (dashed) vs. feedforward + PD" loading="lazy"><figcaption>feedforward only (dashed) vs. feedforward + PD</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>Each axis is a polynomial in time fixed by its boundary conditions: 7th order sideways (position, velocity, tilt and tilt rate at both ends) and 5th order vertically. Feedforward inverts the integrator chain to get the engine commands that follow the path exactly. A cascade PD then corrects errors: a slow outer loop (0.4 rad/s) turns position error into a tilt command, and a fast inner loop (2.0 rad/s) turns that into an engine difference. All six gains come from pole placement, critically damped.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Polynomial trajectory planning</li><li>Feedforward / model inversion</li><li>Cascade control</li><li>Pole placement</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>Feedforward alone missed the pad by 6–13 m, even though it's exact for the continuous model.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Traced it to forward-Euler lag accumulating through four integrators over 500 steps. Adding cascade PD brought the miss to 1.0–2.4 cm, over 100× better.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 3 ---------- -->
+        <article class="stage" id="stage-3">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">03</span><h2>Optimal feedback with LQR</h2></div>
+            <p class="goal">Write down what a good landing costs, and let the math find the best controller.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1300/806"><img src="../assets/rocket/lqr_error.jpg" width="1300" height="806" alt="tracking error: feedforward, PD and LQR" loading="lazy"><figcaption>tracking error: feedforward, PD and LQR</figcaption></figure>
+            <figure class="clip white" data-ar="1100/842"><img src="../assets/rocket/montecarlo.jpg" width="1100" height="842" alt="50 noisy landings each: PD (blue) vs. LQR (orange)" loading="lazy"><figcaption>50 noisy landings each: PD (blue) vs. LQR (orange)</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>A finite-horizon LQR tracking controller: a backward Riccati recursion over all 500 steps gives a time-varying gain and feedforward term, u = Kₜx + kₜ, computed once offline. I tuned the state and input weights on landing accuracy over noisy flights, then compared PD and LQR on 50 Monte Carlo landings with random disturbances.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>LQR</li><li>Riccati recursion</li><li>Dynamic programming</li><li>Cost weighting</li><li>Monte Carlo testing</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The exam's cost penalizes raw thrust, but hovering needs 294 kN. The optimal controller under-thrusts and sinks below the plan.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Penalized the deviation from feedforward thrust, (u − ū)ᵀR(u − ū), which removes the bias. Both versions are reported.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>One clean landing proves nothing once there's process noise.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>50-run Monte Carlo per controller. LQR cut the noisy landing error from 0.44 m to 0.16 m, close to the floor that unpredictable gusts allow.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 4 ---------- -->
+        <article class="stage" id="stage-4">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">04</span><h2>Respect the engine limits with MPC</h2></div>
+            <p class="goal">A controller that plans inside 0 ≤ Tᵢ ≤ 2000 kN instead of discovering the limits by being clipped.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1100/563"><img src="../assets/rocket/mpc_hard_case.jpg" width="1100" height="563" alt="nonlinear rocket, 10 m/s kick: clipped LQR tumbles, MPC lands" loading="lazy"><figcaption>nonlinear rocket, 10 m/s kick: clipped LQR tumbles, MPC lands</figcaption></figure>
+            <figure class="clip white" data-ar="1300/956"><img src="../assets/rocket/mpc_thrusts.jpg" width="1300" height="956" alt="spinning start: clipped LQR saturates its engines, MPC raises thrust for steering room" loading="lazy"><figcaption>engine thrusts: clipped LQR hits zero, MPC stays feasible</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>Receding-horizon MPC: every 0.1 s it solves a quadratic program over the next 2 s (60 decision variables, 160 thrust constraints), applies the first input and re-plans. The terminal cost is the LQR cost-to-go from stage 3, so the 2-second plan knows the cost of finishing the whole landing.</p>
+            <div class="tblwrap"><table class="cmp">
+              <tr><th>Start with +10 m/s sideways</th><th class="n">Landing error</th><th class="n">Peak thrust</th><th>Outcome</th></tr>
+              <tr><td>LQR, commands clipped</td><td class="n">108 km</td><td class="n">159 kN</td><td>loses control</td></tr>
+              <tr><td>MPC, exam's terminal cost</td><td class="n">4.7 km</td><td class="n">2000 kN</td><td>loses control</td></tr>
+              <tr class="win"><td>MPC, LQR cost-to-go (mine)</td><td class="n">2.7 mm</td><td class="n">936 kN</td><td>lands</td></tr>
+            </table></div>
+            <p class="note">How it wins: steering room is limited to half the total thrust (no engine can go negative). MPC briefly raises total thrust to create room, turns the rocket, then settles back. Clipping can never discover that.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Model predictive control</li><li>Quadratic programming</li><li>ADMM</li><li>Terminal cost design</li><li>Actuator saturation</li><li>Nonlinear validation (RK4)</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>MATLAB's Optimization Toolbox wasn't available, so there was no QP solver.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Wrote an ADMM QP solver (the method behind OSQP), checked against a reference solver to 4 digits. A full 500-step MPC landing solves in under half a second.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>The exam's fixed terminal penalty diverged in the hardest case: a 2-second plan can't see the rest of the landing.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Used the time-varying LQR cost-to-go as the terminal cost. It lands where the exam's version fails, and matches LQR exactly when no limit is active.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>In that case MPC tilts the rocket to 33–37°, far outside where the linear model is accurate.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Flew every controller on the full nonlinear equations with RK4. MPC still lands 1.8 cm from the pad at 37° tilt; clipped LQR hits the ground 8.7 km away.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- STAGE 5 ---------- -->
+        <article class="stage" id="stage-5">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">05</span><h2>Residual reinforcement learning</h2></div>
+            <p class="goal">Find out what learning adds on top of a good model-based controller, and when.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1100/589"><img src="../assets/rocket/rl_hist.jpg" width="1100" height="589" alt="engines 5% weaker than modelled: MPC alone vs. MPC + SAC" loading="lazy"><figcaption>engines 5% weaker than modelled: MPC alone vs. MPC + SAC</figcaption></figure>
+            <figure class="clip white" data-ar="1100/534"><img src="../assets/rocket/rl_adapt.jpg" width="1100" height="534" alt="random engine strength: helps when weak, hurts when strong" loading="lazy"><figcaption>random engine strength: helps when weak, hurts when strong</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>A Soft Actor-Critic agent that adds a small correction (±10–30 kN) to the MPC's command. A projection onto the feasible thrusts sits after the sum, so no output from the network, trained or not, can break the engine limits. With no RL toolbox available, I wrote SAC from scratch in MATLAB: the networks, backpropagation, the Adam optimizer and the update rules, with gradients checked against finite differences.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Soft Actor-Critic</li><li>Residual policy learning</li><li>Safe action projection</li><li>Certainty equivalence</li><li>Model mismatch</li><li>Statistical testing</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>With an exact model, the learned correction didn't beat MPC, and in one run made it slightly worse.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Explained it with certainty equivalence: for linear dynamics, zero-mean noise and quadratic cost, the noise-free optimal controller is already optimal. So I tested where learning can help: engines 5% weaker than the model. There, SAC cut touchdown velocity by 34%.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>An RL improvement from one training run could be luck.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Retrained with a new seed (−32%, repeatable), used paired tests over 30 identical landings (p &lt; 0.001), and checked the critic: its predictions correlate 0.98–0.99 with actual returns.</p></div></li>
+              <li class="issue"><div class="p"><b>problem</b><p>With a different random engine strength in every episode, the policy only partly adapted.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Reported it as a partial result: it learned mostly "add thrust", which helps weak engines and hurts strong ones. True adaptation would need more training or a better input signal.</p></div></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- ---------- RESULTS ---------- -->
+        <article class="stage" id="results" style="padding-bottom:24px">
+          <div class="reveal">
+            <p class="topic">/results</p>
+            <h2>Results</h2>
+            <p class="goal">Model-based control wins when the model is right; MPC is essential once limits bind; learning pays off only where the model is wrong.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><span class="num" data-count="2.2 mm">2.2 mm</span><span>LQR landing error without noise, vs. 1.7 cm for cascade PD</span></div>
+            <div class="stat"><span class="num" data-count="2.7 mm">2.7 mm</span><span>MPC landing error after a 10 m/s sideways kick, where clipped LQR misses by 108 km</span></div>
+            <div class="stat"><span class="num" data-count="−34%">−34%</span><span>touchdown velocity with residual SAC when the engines are 5% weaker than modelled</span></div>
+          </div>
+          <div class="tblwrap reveal"><table class="cmp">
+            <tr><th>Controller</th><th>Strength</th><th>Weakness</th></tr>
+            <tr><td>Cascade PD</td><td>simple, intuitive gains, cm accuracy</td><td>not optimal, ignores limits</td></tr>
+            <tr><td>LQR</td><td>optimal for the cost, cheap to run</td><td>clipping can fail badly</td></tr>
+            <tr class="win"><td>MPC (LQR terminal cost)</td><td>optimal and within limits</td><td>a QP every step</td></tr>
+            <tr><td>MPC + residual SAC</td><td>repeatable fix for a consistent model error</td><td>hours of training, no guarantee</td></tr>
+          </table></div>
+          <div class="next reveal">
+            <a class="back" href="../index.html#projects">← All projects</a>
+            <a class="btn ghost" href="../index.html#contact">Talk to me about this project</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Khushali Patel · Robotics software engineering portfolio</div>
+</footer>
+</div>
+
+<script>
+/* Hero illustration: a rocket following a planned descent. Sideways path is a smooth
+   7th-order blend, so tilt (θ = ẍ/g) starts and ends at zero, like the real planner. */
+(() => {
+  const cv = document.getElementById("rocket"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, g = 9.81, T = 50;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const NEON = "#2BF5FF", LIME = "#C6FF3D";
+  // 7th-order smoothstep: zero 1st..3rd derivatives at both ends
+  const S  = s => s*s*s*s*(35 - 84*s + 70*s*s - 20*s*s*s);
+  const S2 = s => 420*s*s*(1-s)*(1-s)*(1-2*s) ; // second derivative of S (closed form)
+  const z5 = s => 1 - (10*s**3 - 15*s**4 + 6*s**5);
+  const x0 = 120, z0 = 500;                       // metres
+  const toPx = (x,z) => [W*0.68 - x*3.0, H - 70 - z*0.92];
+  const trail = [];
+  let t0 = performance.now();
+  const els = {t:document.getElementById("r-t"), z:document.getElementById("r-z"), vz:document.getElementById("r-vz"), th:document.getElementById("r-th")};
+
+  function state(t){
+    const s = Math.min(1, t/T), x = x0*(1 - S(s)), z = z0*z5(s);
+    const xdd = -x0*S2(s)/(T*T), th = xdd/g;      // small-angle tilt that produces ẍ
+    const ds = 1e-3, vz = z0*(z5(Math.min(1,s+ds)) - z5(s))/(ds*T);
+    const zdd = z0*(z5(Math.min(1,s+2*ds)) - 2*z5(Math.min(1,s+ds)) + z5(s))/((ds*T)**2);
+    return {x, z, th, vz, thrust: (zdd + g)/g};
+  }
+
+  function draw(t){
+    const st = state(t);
+    ctx.clearRect(0,0,W,H);
+    // planned path
+    ctx.setLineDash([6,10]); ctx.strokeStyle = "rgba(43,245,255,.28)"; ctx.lineWidth = 2; ctx.beginPath();
+    for (let k = 0; k <= 100; k++){ const p = state(k/100*T), [px,py] = toPx(p.x,p.z); k ? ctx.lineTo(px,py) : ctx.moveTo(px,py); }
+    ctx.stroke(); ctx.setLineDash([]);
+    // ground + pad
+    ctx.strokeStyle = "rgba(255,255,255,.12)"; ctx.beginPath(); ctx.moveTo(0,H-62); ctx.lineTo(W,H-62); ctx.stroke();
+    const [padx] = toPx(0,0);
+    ctx.fillStyle = LIME; ctx.shadowColor = LIME; ctx.shadowBlur = 14; ctx.fillRect(padx-46,H-64,92,5); ctx.shadowBlur = 0;
+    ctx.fillStyle = "rgba(198,255,61,.6)"; ctx.font = "600 20px 'JetBrains Mono', monospace"; ctx.textAlign = "center"; ctx.fillText("PAD", padx, H-28);
+    // trail
+    const [rx,ry] = toPx(st.x, st.z);
+    trail.push([rx,ry]); if (trail.length > 70) trail.shift();
+    for (let i = 1; i < trail.length; i++){ ctx.strokeStyle = `rgba(198,255,61,${i/trail.length*.7})`; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(...trail[i-1]); ctx.lineTo(...trail[i]); ctx.stroke(); }
+    // rocket (tilt exaggerated ×6 so it reads at this scale)
+    ctx.save(); ctx.translate(rx, ry); ctx.rotate(-st.th*6);
+    const flame = 22 + 26*Math.max(0, st.thrust - .6) + Math.random()*8;
+    const gr = ctx.createLinearGradient(0,0,0,flame+30); gr.addColorStop(0,"rgba(198,255,61,.95)"); gr.addColorStop(1,"rgba(43,245,255,0)");
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(-9,4); ctx.lineTo(0,flame+30); ctx.lineTo(9,4); ctx.fill();
+    ctx.fillStyle = "#1C242C"; ctx.strokeStyle = NEON; ctx.lineWidth = 2.5; ctx.shadowColor = NEON; ctx.shadowBlur = 14;
+    ctx.beginPath(); ctx.rect(-11,-92,22,92); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-11,-92); ctx.lineTo(0,-114); ctx.lineTo(11,-92); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-11,-8); ctx.lineTo(-24,6); ctx.moveTo(11,-8); ctx.lineTo(24,6); ctx.stroke();
+    ctx.restore(); ctx.shadowBlur = 0;
+    els.t.textContent = t.toFixed(1)+" s"; els.z.textContent = st.z.toFixed(0)+" m";
+    els.vz.textContent = st.vz.toFixed(1)+" m/s"; els.th.textContent = (st.th*180/Math.PI).toFixed(2)+"°";
+  }
+  function loop(now){
+    const t = ((now - t0)/1000) * 5;            // 5× real time
+    if (t > T + 6){ t0 = now; trail.length = 0; }
+    draw(Math.min(T, t)); requestAnimationFrame(loop);
+  }
+  if (reduce) draw(T*0.6); else requestAnimationFrame(loop);
+})();
+</script>
+<script src="../js/site.js"></script>
+</body>
+</html>

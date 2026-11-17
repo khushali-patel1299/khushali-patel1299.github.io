@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Computed-torque control of a 2-link arm — Khushali Patel</title>
+<meta name="description" content="Lagrangian model, computed-torque control, inverse-dynamics feedforward, trajectory filters, integral action and Cartesian tracking with inverse kinematics for a planar 2-link arm in MATLAB/Simulink.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/icons.css">
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-glow" aria-hidden="true"></div>
+<ul class="social-rail" aria-label="Contact links"><li><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+<div class="page">
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="../index.html"><i aria-hidden="true"></i>Khushali Patel</a>
+    <div class="nav-right">
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="../index.html#projects">All projects</a></li>
+        <li class="hide-sm"><a href="#roadmap">Roadmap</a></li>
+        <li class="hide-sm"><a href="#results">Results</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-social"><li class=""><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li class=""><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li class=""><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li class="opt"><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <section class="case-hero">
+    <div class="wrap">
+      <a class="back" href="../index.html#projects">← All projects</a>
+      <p class="topic" style="margin-top:28px">/projects/two-link-arm</p>
+      <h1>Computed-torque control of a 2-link arm, from <span class="scr" id="scramble">joints to Cartesian</span></h1>
+      <p class="lede">A planar two-link arm is coupled, nonlinear and, left alone, chaotic. I modelled it, then built up its controller one problem at a time: weak motors, a wrong model, and finally tracking straight lines in x–y through inverse kinematics.</p>
+      <dl class="facts">
+        <div><dt>Course</dt><dd>ME 282, SJSU, Spring 2026</dd></div>
+        <div><dt>System</dt><dd>2-link planar arm, 0.5 m and 0.3 m links, torque-controlled joints</dd></div>
+        <div><dt>Stack</dt><dd>MATLAB, Simulink, MATLAB function blocks, custom animation</dd></div>
+        <div><dt>Outcome</dt><dd>Zero steady-state error under a 4% mass mismatch; stable at the workspace edge</dd></div>
+      </dl>
+      <div class="fit-row reveal" data-maxh="560">
+            <figure class="clip white" data-ar="1288/720"><img src="../assets/twolink/line_sigma10.jpg" width="1288" height="720" alt="Cartesian line tracking with IK and σ = 10: desired (red) vs. actual (blue), with the live arm" loading="lazy"><figcaption>Cartesian line tracking with IK and σ = 10: desired (red) vs. actual (blue), with the live arm</figcaption></figure>
+          </div>
+    </div>
+  </section>
+
+  <section id="roadmap" style="padding-top:48px">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/roadmap</p>
+        <h2>One problem at a time</h2>
+        <p class="sub">Each stage keeps the controller from the one before and adds what the new problem needs.</p>
+      </div>
+      <ol class="roadmap reveal"><li><a href="#stage-1" data-stage-link="stage-1"><span class="node">01</span><h3>Model + chaos</h3><p>Lagrangian dynamics, chaos</p></a></li><li><a href="#stage-2" data-stage-link="stage-2"><span class="node">02</span><h3>Computed torque</h3><p>Cancel the nonlinearities</p></a></li><li><a href="#stage-3" data-stage-link="stage-3"><span class="node">03</span><h3>Weak motors</h3><p>±5 N·m and feedforward</p></a></li><li><a href="#stage-4" data-stage-link="stage-4"><span class="node">04</span><h3>Wrong model</h3><p>Filters and integral action</p></a></li><li><a href="#stage-5" data-stage-link="stage-5"><span class="node">05</span><h3>Cartesian + IK</h3><p>IK, workspace, atan2</p></a></li></ol>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap stages">
+      <ol class="rail" aria-label="Stages"><li><a href="#stage-1" data-stage-link="stage-1"><span>01</span>Model + chaos</a></li><li><a href="#stage-2" data-stage-link="stage-2"><span>02</span>Computed torque</a></li><li><a href="#stage-3" data-stage-link="stage-3"><span>03</span>Weak motors</a></li><li><a href="#stage-4" data-stage-link="stage-4"><span>04</span>Wrong model</a></li><li><a href="#stage-5" data-stage-link="stage-5"><span>05</span>Cartesian + IK</a></li><li><a href="#results" data-stage-link="results"><span>→</span>Results</a></li></ol>
+      <div>
+        <article class="stage" id="stage-1">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">01</span><h2>Model the arm, and see why it needs control</h2></div>
+            <p class="goal">Equations of motion I can simulate, and a feel for how sensitive this system is.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1300/521"><img src="../assets/twolink/plant_simulink.jpg" width="1300" height="521" alt="Simulink plant: torque in, joint angles out" loading="lazy"><figcaption>Simulink plant: torque in, joint angles out</figcaption></figure>
+            <figure class="clip white" data-ar="992/514"><img src="../assets/twolink/chaos.jpg" width="992" height="514" alt="two nearly identical starts diverge completely" loading="lazy"><figcaption>two nearly identical starts diverge completely</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>I derived the dynamics with Lagrangian mechanics in the standard form M(θ)θ̈ + C(θ, θ̇)θ̇ + N(θ) = τ: an inertia matrix that changes with the elbow angle, Coriolis and centripetal terms, and gravity torques. The plant is a MATLAB function block in Simulink that solves for θ̈, integrated twice, with an animation of the arm drawn from the joint angles.</p><p>With no torque applied the arm is a double pendulum. Starting two simulations a hair apart, the joint angles track each other for a few seconds and then diverge completely: it's chaotic.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Lagrangian dynamics</li><li>Inertia, Coriolis and gravity matrices</li><li>Simulink modelling</li><li>Chaos / sensitivity to initial conditions</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>A chaotic plant means small model errors or disturbances grow quickly if nothing corrects them.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Everything that follows is feedback built on the model, and later stages test exactly what happens when the model is wrong.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-2">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">02</span><h2>Computed-torque control</h2></div>
+            <p class="goal">Cancel the arm's nonlinear dynamics so each joint behaves like a simple, tunable second-order system.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1125/358"><img src="../assets/twolink/step_j1.jpg" width="1125" height="358" alt="joint 1 following a step command" loading="lazy"><figcaption>joint 1 following a step command</figcaption></figure>
+            <figure class="clip white" data-ar="1118/359"><img src="../assets/twolink/step_j2.jpg" width="1118" height="359" alt="joint 2 following a step command" loading="lazy"><figcaption>joint 2 following a step command</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>The controller uses the model to cancel the dynamics: τ = M(θ)(θ̈<sub>d</sub> + K₁ė + K₂e) + C(θ, θ̇)θ̇ + N(θ). What's left is linear, decoupled error dynamics, ë + K₁ė + K₂e = 0 for each joint, with the gains set from a single bandwidth λ (K₁ = 2λ, K₂ = λ², critically damped). With ±50 N·m available, each joint catches a step command within about a second with no steady-state error.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Feedback linearization</li><li>Computed-torque control</li><li>Error dynamics</li><li>Pole placement</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>Coupled joints: moving one link pushes the other through inertia, Coriolis and gravity terms.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Cancelling M, C and N inside the control law decouples them, so each joint can be tuned on its own.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-3">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">03</span><h2>Make it work with weak motors</h2></div>
+            <p class="goal">Real actuators saturate. See what breaks at ±5 N·m and fix it.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1125/358"><img src="../assets/twolink/sat_j1.jpg" width="1125" height="358" alt="±5 N·m: joint 1" loading="lazy"><figcaption>±5 N·m: joint 1</figcaption></figure>
+            <figure class="clip white" data-ar="1125/359"><img src="../assets/twolink/sat_j2.jpg" width="1125" height="359" alt="±5 N·m: joint 2 dips the wrong way first" loading="lazy"><figcaption>±5 N·m: joint 2 dips the wrong way first</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>Dropping the torque limit from ±50 to ±5 N·m is like swapping in much weaker motors. The controller still asks for an instant move, but the motors can't deliver it. I then added an inverse-dynamics feedforward: it computes the torque needed to follow the desired path from M, C and N ahead of time, so the PD part only cleans up small errors.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Actuator saturation</li><li>Inverse-dynamics feedforward</li><li>Reactive vs. proactive control</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>At ±5 N·m, joint 2 dips in the wrong direction before recovering: joint 1 swings hard, and the coupling drags joint 2 back faster than its weak motor can resist.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Inverse-dynamics feedforward anticipates those coupling torques before they cause an error. Tracking improved drastically.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-4">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">04</span><h2>Stay accurate when the model is wrong</h2></div>
+            <p class="goal">The controller believes link 1 weighs 0.50 kg; the real one is 0.48 kg.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1125/358"><img src="../assets/twolink/ff_j1.jpg" width="1125" height="358" alt="with inverse-dynamics feedforward: joint 1" loading="lazy"><figcaption>with inverse-dynamics feedforward: joint 1</figcaption></figure>
+            <figure class="clip white" data-ar="1118/359"><img src="../assets/twolink/ff_j2.jpg" width="1118" height="359" alt="with inverse-dynamics feedforward: joint 2" loading="lazy"><figcaption>with inverse-dynamics feedforward: joint 2</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>With a 4% mass mismatch between controller and plant, I added two things. Trajectory filters with bandwidth σ turn harsh step commands into smooth, physically possible curves. Integral action accumulates the small leftover error and supplies the torque the wrong model can't account for. I also swept combinations of λ (feedback stiffness) and σ (filter speed) to see how they trade responsiveness against robustness.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Model mismatch</li><li>Trajectory filtering</li><li>Integral action</li><li>Bandwidth trade-offs</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>A step command demands near-infinite acceleration. Multiplied by the wrong mass and inertia, that becomes a large torque error, with overshoot and oscillation.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Trajectory filters bound the desired acceleration, so the parameter error only produces a small torque error.</p></div></li><li class="issue"><div class="p"><b>problem</b><p>PD needs a persistent error to make the extra torque a wrong model needs, so a steady-state offset remained.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Added an integrator. It builds up exactly the missing torque and drives the steady-state error to zero.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-5">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">05</span><h2>Track Cartesian paths through inverse kinematics</h2></div>
+            <p class="goal">Command the gripper's x–y position instead of joint angles.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1288/720"><img src="../assets/twolink/line_sigma5.jpg" width="1288" height="720" alt="horizontal line, σ = 5: visible phase lag" loading="lazy"><figcaption>horizontal line, σ = 5: visible phase lag</figcaption></figure>
+            <figure class="clip white" data-ar="1288/720"><img src="../assets/twolink/line_sigma10.jpg" width="1288" height="720" alt="horizontal line, σ = 10: path overlaps the target" loading="lazy"><figcaption>horizontal line, σ = 10: path overlaps the target</figcaption></figure>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1288/720"><img src="../assets/twolink/workspace.jpg" width="1288" height="720" alt="target leaves the reachable area: the arm traces the boundary" loading="lazy"><figcaption>target leaves the reachable area: the arm traces the boundary</figcaption></figure>
+            <figure class="clip white" data-ar="1288/720"><img src="../assets/twolink/atan2_swing.jpg" width="1288" height="720" alt="vertical line at x = −0.6 m: the arm swings the long way round" loading="lazy"><figcaption>vertical line at x = −0.6 m: the arm swings the long way round</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>An analytical IK block turns the desired (x, y) into joint angles, computing both elbow-up and elbow-down solutions and choosing the one closest to the arm's current configuration. A workspace check runs first: a target outside the reachable ring (closer than l₁ − l₂ or farther than l₁ + l₂) is projected radially onto the nearest reachable point. I tested horizontal and vertical lines, varied σ, and sent targets outside the workspace on purpose.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Analytical inverse kinematics</li><li>Multiple IK solutions</li><li>Workspace limits</li><li>Phase lag</li><li>Angle wrap-around</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>Following a horizontal line with σ = 5, the arm lagged in x and sat about 5 cm off in y.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Raised the filter bandwidth to σ = 10, which removes most of the lag. The actual path now overlaps the target.</p></div></li><li class="issue"><div class="p"><b>problem</b><p>Targets beyond the arm's reach would make the IK return invalid angles.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Radial projection onto the workspace boundary. The arm traces the edge of what it can reach (about 0.65 m) and stays stable.</p></div></li><li class="issue"><div class="p"><b>problem</b><p>Tracking a vertical line at x = −0.6 m, the arm suddenly swung through a huge arc each time the target crossed y = 0.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b class="found">diagnosis</b><p>Traced it to atan2 jumping from +180° to −180°. The controller saw a 360° error and drove the joint the long way round. The cure is to compute joint error on the shortest angle, wrapped to ±180°.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="results" style="padding-bottom:24px">
+          <div class="reveal">
+            <p class="topic">/results</p>
+            <h2>Results</h2>
+            <p class="goal">Model-based control does the heavy lifting; filters and integral action make it robust to a model that's slightly wrong.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><span class="num" data-count="~1 s">~1 s</span><span>for each joint to catch a step command with computed-torque control</span></div>
+            <div class="stat"><span class="num" data-count="0">0</span><span>steady-state error with integral action, despite a 4% mass mismatch</span></div>
+            <div class="stat"><span class="num" data-count="0.65 m">0.65 m</span><span>the arm holds the workspace edge and stays stable when sent to unreachable points</span></div>
+          </div>
+          <div class="next reveal">
+            <a class="back" href="../index.html#projects">← All projects</a>
+            <a class="btn ghost" href="../index.html#contact">Talk to me about this project</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Khushali Patel · Robotics software engineering portfolio</div>
+</footer>
+</div>
+<script src="../js/site.js"></script>
+</body>
+</html>

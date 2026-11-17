@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khushali Patel — Robotics Software Engineer</title>
+<meta name="description" content="Robotics software engineer: ROS 2, C++, state estimation, control and embedded systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/icons.css">
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-glow" aria-hidden="true"></div>
+
+<ul class="social-rail" aria-label="Contact links"><li><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li><a href="resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+<div class="page">
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="#top"><i aria-hidden="true"></i>Khushali Patel</a>
+    <div class="nav-right">
+    <nav aria-label="Main">
+      <ul>
+        <li class="hide-sm"><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li class="hide-sm"><a href="#stack">Skills</a></li>
+        <li class="hide-sm"><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-social"><li class=""><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li class=""><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li class=""><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li class="opt"><a href="resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-head">
+        <div class="status"><i></i>Available full-time from May 2027</div>
+        <p class="hello">Hi, I'm Khushali, a robotics software engineer.</p>
+        <h1>I build <span class="rot" id="roles" data-roles="depth perception.|inverse kinematics.|robot learning pipelines.|embedded firmware.|touch-driven grasps.|controllers for real hardware.">depth perception.</span></h1>
+      </div>
+      <div>
+        <p class="lede">M.S. Mechanical Engineering (Robotics) at San José State. I write <strong>ROS 2, C++ and embedded code for estimation and control</strong>, then test it on real hardware. Before grad school I spent three years in test and validation at John Deere.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#projects">See projects</a>
+          <a class="btn ghost" href="resume.pdf">Download résumé</a>
+        </div>
+      </div>
+      <div class="rig-wrap">
+      <figure class="rig">
+        <canvas id="arm" width="1000" height="800" aria-label="Interactive two-link robot arm. Its gripper follows your pointer using inverse kinematics."></canvas>
+        <div class="hud" aria-hidden="true">
+          <span class="brk a"></span><span class="brk b"></span><span class="brk c"></span><span class="brk d"></span>
+          <div class="tl">/arm/joint_states</div>
+          <div class="tr" id="hint">move your pointer here</div>
+          <div class="bl"><span>θ₁ <b id="t1">0.0°</b></span><span>θ₂ <b id="t2">0.0°</b></span><span class="live" id="mode">auto: figure-8</span></div>
+        </div>
+      </figure>
+      <p class="rig-note">This arm uses closed-form two-link inverse kinematics, the same math as my <a href="projects/twolink.html">manipulator project</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" style="padding-top:40px">
+    <div class="wrap about reveal">
+      <figure class="portrait" id="portrait">
+        <span class="brk a"></span><span class="brk b"></span><span class="brk c"></span><span class="brk d"></span>
+        <!-- YOUR PHOTO: save it as assets/me.jpg (portrait, about 4:5, at least 800 px wide). -->
+        <img src="assets/me.jpg" alt="Khushali Patel" width="800" height="1000" onerror="this.closest('.portrait').classList.add('empty');this.remove()">
+        <div class="portrait-empty" aria-hidden="true"><i class="ic ic-arm"></i><span>your photo here<br>assets/me.jpg</span></div>
+      </figure>
+      <div>
+        <p class="topic">/about</p>
+        <h2>About me</h2>
+        <p>I'm a robotics engineer finishing my M.S. in Mechanical Engineering at San José State, focused on dynamics, controls and robot learning. I like the part where the math meets a real robot: deriving the model, writing the controller, and then finding out on hardware what the model missed.</p>
+        <p>Before grad school I spent three years at John Deere validating hydraulic and electromechanical systems for construction and forestry machines. That's where I learned to test things properly. Today I build hardware-in-the-loop test automation at SPAN, write STM32 firmware for the SJSU Robotics Mars rover, and do my MS project on depth-based person following for the Jackie service robot.</p>
+        <ul class="about-facts">
+          <li><b>Focus</b><span>manipulation, state estimation, optimal control, robot learning</span></li>
+          <li><b>Tools</b><span>C++, Python, ROS 2, MuJoCo, MATLAB/Simulink, STM32</span></li>
+          <li><b>Looking for</b><span>full-time robotics software roles from May 2027</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/projects</p>
+        <h2>Selected projects</h2>
+        <p class="sub">The six full-width projects have case studies: each stage, the problems I hit and how I fixed them.</p>
+      </div>
+      <div class="projects grid" id="project-list"></div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/skills</p>
+        <h2>Where I work in the robot</h2>
+        <p class="sub">Skills grouped by layer of the autonomy stack. The bar shows how deep I've gone in each.</p>
+      </div>
+      <div class="pipe reveal" id="stack-list"><span class="pulse" aria-hidden="true"></span></div>
+      <p class="flow-note">sensors in ↓ motor commands out</p>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/experience</p>
+        <h2>Experience</h2>
+        <p class="sub">Most recent first. Open Details for what I did and what it changed.</p>
+      </div>
+      <div class="orgs" id="work-cards"></div>
+      <div class="reveal" style="margin-top:72px">
+        <p class="topic">/education</p>
+        <h2>Education and leadership</h2>
+      </div>
+      <div class="orgs" id="edu-cards" style="margin-top:36px"></div>
+    </div>
+  </section>
+
+  <dialog class="org-dialog" id="org-dialog" aria-labelledby="org-dialog-title">
+    <div class="od-head"><div class="od-logo" id="org-dialog-logo"></div><div><h3 id="org-dialog-title"></h3><p class="od-meta" id="org-dialog-meta"></p></div></div>
+    <ul id="org-dialog-points"></ul>
+    <button class="btn ghost od-close" id="org-dialog-close">Close</button>
+  </dialog>
+
+  <section id="contact" style="padding-top:32px">
+    <div class="wrap">
+      <div class="contact reveal">
+        <div>
+          <p class="topic">/contact</p>
+          <h2>Let's talk robots.</h2>
+          <p>I'm looking for full-time robotics software roles starting after I graduate in May 2027.</p>
+        </div>
+        <ul>
+          <li><a href="mailto:khushali.patel1299@gmail.com"><span class="lbl"><i class="ic ic-mail" aria-hidden="true"></i>Email</span> <span>khushali.patel1299@gmail.com</span></a></li>
+          <li><a href="https://www.linkedin.com/in/khushali-g-patel"><span class="lbl"><i class="ic ic-linkedin" aria-hidden="true"></i>LinkedIn</span> <span>/in/khushali-g-patel</span></a></li>
+          <li><a href="https://github.com/khushali-patel1299"><span class="lbl"><i class="ic ic-github" aria-hidden="true"></i>GitHub</span> <span>khushali-patel1299</span></a></li>
+          <li><a href="resume.pdf"><span class="lbl"><i class="ic ic-doc" aria-hidden="true"></i>Résumé</span> <span>PDF</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Built by hand and hosted on GitHub Pages.</div>
+</footer>
+</div>
+
+<script>
+/* =====================================================================
+   EDIT YOUR CONTENT HERE. Everything below the content block renders it.
+   For media, put files in an /assets folder and set e.g. media:"assets/turret.gif"
+   (or .mp4). Leave media empty to show a placeholder box.
+   ===================================================================== */
+const PROJECTS = [
+  {
+    title: "SO-101 robot arm: from teleoperation to a learned grasp",
+    category: "manipulation / robot learning",
+    summary: "Took a 6-DOF arm from teleoperation to a learned grasp: kinematics from the MuJoCo model, IK pick-and-place on the real arm, then a SAC policy that grasps and lifts a cube.",
+    context: "ME 297 Embodied Intelligence & Robot Learning, SJSU · Python, MuJoCo, LeRobot · Fall 2026",
+    problem: "Take a low-cost 6-DOF arm from first teleoperation to picking up a cube on its own, in simulation and on the real robot.",
+    approach: "Built forward kinematics from the MuJoCo model, solved closed-form inverse kinematics and ran IK pick-and-place on hardware. Then trained a SAC policy to grasp and lift a cube in simulation.",
+    resultNum: "10/10",
+    resultText: "evaluation episodes lifted and held the cube after 700k training steps",
+    tags: ["MuJoCo", "Inverse kinematics", "SAC", "Stable-Baselines3", "LeRobot", "Python"],
+    feature: true,
+    media: [{src:"assets/so101/rl_lift.mp4", w:468, h:724, label:"RL · MuJoCo"}, {src:"assets/so101/ik_hw.mp4", w:1360, h:1080, label:"Inverse kinematics · real arm"}],
+    caseStudy: "projects/so101.html",
+    links: []
+  },
+  {
+    title: "Paper Hands: a humanoid copies how I pick up paper",
+    category: "humanoid / learning from demonstration",
+    summary: "A Unitree G1 learns to slide, pinch, straighten and place a sheet of paper from two videos of me doing it, retargeted with null-space IK and controlled by fingertip touch.",
+    context: "Armature AI Labs Humanoid Challenge, joint 5th of 19 builds · Unitree G1 + Dex3, MuJoCo, MediaPipe · Nov 2026",
+    problem: "Teach a humanoid to slide a sheet of paper to the table edge, pinch it, lift it, straighten it and lay it inside a target, using only videos of me doing it.",
+    approach: "Measured my hand and the sheet from two cameras with MediaPipe and a colour tracker, retargeted the motion to the G1 arm with damped least-squares IK, and closed the loop with fingertip touch sensors.",
+    resultNum: "5th",
+    resultText: "place (joint) of 19 submitted builds, 160+ registered; 20/20 randomized placements, gripping at 1.9 N instead of 16 N",
+    tags: ["MuJoCo", "MediaPipe", "Retargeting", "Null-space IK", "Tactile sensing", "Python"],
+    feature: true,
+    media: [{src:"assets/humanoid/side_by_side.mp4", w:1360, h:720, label:"me vs. G1 in MuJoCo"}],
+    caseStudy: "projects/humanoid.html",
+    links: [{label:"Code on GitHub", href:"https://github.com/khushali-patel1299/Humanoid-Challenge"}, {label:"The challenge", href:"https://luma.com/784lh668"}]
+  },
+  {
+    title: "Following people who aren't facing the robot: RGB-D tracking for Jackie",
+    category: "perception / human-robot interaction",
+    summary: "My MS project. Jackie, a concierge robot, follows people by their face and loses them when they turn away. I mapped its vendor ROS1 stack without changing it, found an unused depth camera, and measured that depth keeps the user in view at any orientation.",
+    context: "MS project, BioRob Lab (Dr. Lin Jiang), SJSU · Python, ROS1/rosbridge, OpenCV · in progress",
+    problem: "Face-based following fails when the user turns away or steps back.",
+    approach: "Non-invasive probes, depth camera characterization, range and orientation datasets; Kalman tracker next.",
+    resultNum: "~2×",
+    resultText: "trackable range with depth (0.5–2.0 m, any orientation) vs. ~1.25 m for the face camera",
+    tags: ["Python", "ROS", "OpenCV", "NumPy", "WebSockets", "Depth camera"],
+    feature: true,
+    mediaSide: {src:"assets/jackie/jackie_live.mp4", w:720, h:1280, label:"live test"},
+    mediaRows: [
+      [{src:"assets/jackie/rgb_facing.jpg", w:480, h:480, label:"RGB"}, {src:"assets/jackie/depth_facing.jpg", w:480, h:480, label:"depth"},
+       {src:"assets/jackie/rgb_away.jpg", w:480, h:480, label:"RGB, turned"}, {src:"assets/jackie/depth_away.jpg", w:480, h:480, label:"depth, turned"}],
+      [{src:"assets/jackie/range_chart.jpg", w:1280, h:640, white:true}]
+    ],
+    caseStudy: "projects/jackie.html",
+    links: []
+  },
+  {
+    title: "Landing a rocket four ways: PD, LQR, MPC and RL",
+    category: "control / optimal control",
+    summary: "Landed a 30-tonne, four-engine booster with cascade PD, finite-horizon LQR, constrained MPC on my own QP solver, and residual SAC, then compared what each one actually buys you.",
+    context: "ME 297 midterm, SJSU · MATLAB, no toolboxes · Fall 2026",
+    problem: "Land a falling rocket upright on a pad in 50 s using four throttleable engines that can't go negative.",
+    approach: "Derived and verified a linear model, then built PD, LQR, MPC and residual RL controllers on top of each other.",
+    resultNum: "2.7 mm",
+    resultText: "MPC landing error after a 10 m/s sideways kick, where clipped LQR misses by 108 km",
+    tags: ["MATLAB", "LQR", "MPC", "ADMM QP solver", "SAC", "Nonlinear simulation"],
+    feature: true,
+    media: [{src:"assets/rocket/mpc_hard_case.jpg", w:1100, h:563, white:true}],
+    caseStudy: "projects/rocket.html",
+    links: []
+  },
+  {
+    title: "Computed-torque control of a 2-link arm, joint space to Cartesian",
+    category: "control / manipulation",
+    summary: "Modelled a planar 2-link arm with Lagrangian dynamics, then built computed-torque control, feedforward, trajectory filters and an integrator, and finally Cartesian tracking through IK with workspace limits.",
+    context: "ME 282, SJSU · MATLAB/Simulink · Spring 2026",
+    problem: "Track joint and Cartesian trajectories on a coupled, nonlinear 2-link arm with weak motors and an imperfect model.",
+    approach: "Lagrangian model, computed-torque control, inverse-dynamics feedforward, trajectory filters, integral action, analytical IK with workspace projection.",
+    resultNum: "0",
+    resultText: "steady-state error with integral action, despite a 4% mass mismatch between model and plant",
+    tags: ["Feedback linearization", "Lagrangian dynamics", "Inverse kinematics", "MATLAB", "Simulink"],
+    feature: true,
+    media: [{src:"assets/twolink/line_sigma10.jpg", w:1288, h:720, white:true}],
+    caseStudy: "projects/twolink.html",
+    links: []
+  },
+  {
+    title: "DC motor control: making the model match the motor",
+    category: "control / system identification",
+    summary: "Speed control with a tachometer, then position control with an encoder, on Arduino. The datasheet model was 6.5× too fast; one oscilloscope step test let us fit its inertia and friction until it predicted the hardware within 6%.",
+    context: "ME 285 Mechatronics, SJSU, with Pooja Tiwari · Arduino, Simulink · Fall 2025",
+    problem: "Design PID speed and position controllers for a real DC motor from a model.",
+    approach: "Simulink model from the datasheet, open-loop step test, system identification of J and b, retune, then encoder position control.",
+    resultNum: "6%",
+    resultText: "closed-loop rise time, hardware vs. calibrated model (250 vs. 265 ms); the datasheet model was 6.5× off",
+    tags: ["System identification", "PID + feedforward", "Simulink", "Arduino", "C++"],
+    feature: true,
+    media: [{src:"assets/dcmotor/setup_position.jpg", w:1200, h:1600, label:"bench setup"}, {src:"assets/dcmotor/scope_closed_loop.jpg", w:800, h:489, label:"velocity step, real motor"}],
+    caseStudy: "projects/dcmotor.html",
+    links: []
+  },
+  {
+    title: "Smart walker: predicting where the user wants to go",
+    category: "assistive robotics / machine learning",
+    summary: "Thesis project with the SJSU ARMS Lab: classify forward, left, right and stop from handlebar force-torque and IMU signals, and feed the classifier's confidence into the walker's ROS 2 shared control.",
+    context: "ME 291 research proposal, ARMS Lab (Prof. M. Sharifi) · Python, ROS 2 · Jun 2026 – May 2027",
+    problem: "The walker reads user intent with hand-tuned force rules that break across users and conditions.",
+    approach: "Built the full pipeline on surrogate 100 Hz force data first: Butterworth filtering, offset correction, dead-zone thresholding, 0.5 s sliding-window features, and four classifiers compared per class. Next: real data from participants and a ROS 2 node under 50 ms latency.",
+    resultNum: "98%",
+    resultText: "four-class accuracy on surrogate data across all four models; target on real data is 85% or better",
+    tags: ["Python", "scikit-learn", "ROS 2", "Signal processing", "Shared control"],
+    media: [{src:"assets/walker/preprocessing.jpg", w:1536, h:754, white:true}],
+    links: []
+  },
+  {
+    title: "Teleoperation mimic for a Mars rover arm",
+    category: "embedded / teleoperation",
+    summary: "Embedded C++ on STM32 that makes the SJSU Mars rover's arm copy a hand-held controller arm, linking its actuators and sensors to the ROS 2 stack.",
+    cardResult: "In development with the SJSU Robotics firmware team.",
+    context: "SJSU Robotics, firmware team · C++, STM32 · Apr 2026 – present",
+    problem: "Operators need the rover's arm to copy a hand-held controller arm smoothly and accurately.",
+    approach: "Writing embedded C++ with libhal on STM32 that connects the arm's actuators and sensors to the ROS 2 stack. Tuning servo control and feedback linearization using forward and inverse kinematics, and checking board bring-up with hardware-in-the-loop tests.",
+    resultNum: "",
+    resultText: "Built with the electrical and autonomy subteams. I also write telemetry streaming for the team's autonomous drone.",
+    tags: ["C++", "STM32", "libhal", "ROS 2", "Kinematics", "HIL testing"],
+    media: "",
+    links: []
+  },
+  {
+    title: "IMU-controlled dual-axis laser turret",
+    category: "embedded",
+    summary: "A two-servo laser turret that points wherever the board is tilted. Raw I²C reads from an MPU-6050 with no library, a complementary filter fusing gyro and accelerometer, and a 1° dead band so the servos don't chatter.",
+    context: "SJSU Robotics firmware trial · Arduino, MPU-6050 · Mar 2026",
+    problem: "Point a two-servo laser turret wherever the breadboard is tilted, in real time and without jitter.",
+    approach: "Read all 14 bytes of accelerometer and gyro data in one 400 kHz I²C burst. Each axis fuses gyro rate and accelerometer tilt with a 0.98/0.02 complementary filter, and only writes to the servo when the angle changes by more than 1°. A 100-sample circular buffer tracks a running mean and standard deviation for noise monitoring, and the loop rate and stats print to serial every 400 ms on a millis() timer.",
+    resultNum: "",
+    resultText: "Smooth, jitter-free pointing on both axes. Written as one reusable TurretAxis class per servo.",
+    tags: ["Embedded C++", "I²C", "Complementary filter", "Arduino", "Git"],
+    code: `<span class="c">// per axis, every loop: fuse gyro rate with accelerometer tilt</span>
+<span class="k">float</span> gyroRate = gyro / <span class="n">131.0</span>;            <span class="c">// LSB → °/s</span>
+filtered = <span class="n">0.98</span> * (filtered + gyroRate * dt)
+         + <span class="n">0.02</span> * accelAngle;
+
+<span class="k">int</span> angle = constrain(filtered, <span class="n">0</span>, <span class="n">180</span>);
+<span class="k">if</span> (abs(angle - lastAngle) &gt; <span class="n">1</span>) {        <span class="c">// 1° dead band</span>
+  servo.write(angle);
+  lastAngle = angle;
+}`,
+    links: [{label:"Code on GitHub", href:"https://github.com/khushali-patel1299/SJSU-Robotics-Turret-Trial"}]
+  }
+];
+
+// strength: 0.3 (familiar) to 1 (strongest). Adjust these to match how you see yourself.
+const STACK = [
+  { layer:"Perception",          strength:.5,  skills:"RGB-D depth processing, camera intrinsics and geometry, OpenCV, MediaPipe hand tracking" },
+  { layer:"State estimation",    strength:.75, skills:"Kalman filtering, sensor fusion, signal conditioning and filtering" },
+  { layer:"Planning & navigation", strength:.6, skills:"Trajectory generation and filtering, forward and inverse kinematics, MPC, retargeting" },
+  { layer:"Control",             strength:1,   skills:"PID and feedforward, feedback linearization, nonlinear control, servo control, system identification, MATLAB/Simulink" },
+  { layer:"Embedded & test",     strength:.9,  skills:"Embedded C++ on STM32 (libhal) and Arduino, I²C/SPI, CAN bus, oscilloscopes, DAQ, hardware-in-the-loop testing" },
+  { layer:"Mechanism",           strength:.85, skills:"SolidWorks, Creo, ANSYS FEA, fixture design and calibration, GD&T" },
+  { layer:"Software tooling",    strength:.8,  skills:"C++17, Python, ROS 2, Linux/Ubuntu, Git, Docker, GTest, test automation" }
+];
+
+// Experience and education cards. logo: put a PNG/SVG in assets/logos/ and set e.g. logo:"assets/logos/sjsu.png".
+// Without a logo the card shows the monogram.
+const WORK = [
+  { org:"SPAN", mono:"SPAN", logo:"assets/logos/span.png", logoBg:"#1f1f1f", logoW:"52%", role:"Hardware Test Intern → Co-op", when:"May 2026 – present",
+    blurb:"Automated hardware-in-the-loop validation, cutting manual test time by 80%.",
+    points:["Built modular Python/C++ frameworks for continuous hardware-in-the-loop (HIL) validation, cutting manual test execution time by 80%.",
+            "Debug hardware/software integration by matching CAN bus telemetry against oscilloscope captures for root-cause analysis.",
+            "Turn compliance requirements into automated test procedures, cutting validation cycle time by 40%."] },
+  { org:"SJSU Robotics", mono:"SJSU ROBOTICS", logo:"assets/logos/sjsu_robotics.png", logoBg:"#000", role:"Firmware Team Member", when:"Apr 2026 – present",
+    blurb:"Embedded C++ on STM32 for the Mars rover arm and the autonomous drone.",
+    points:["Write embedded C++ with libhal on STM32 that links the rover's actuators and sensors to the ROS 2 stack.",
+            "Tune servo control and feedback linearization with forward and inverse kinematics for the arm's teleoperation mimic.",
+            "Write telemetry streaming for the team's autonomous drone, working with the electrical and autonomy subteams."] },
+  { org:"John Deere", mono:"JD", logo:"assets/logos/johndeere.png", logoBg:"#000", role:"Senior Engineer I", when:"Jul 2022 – Jul 2025",
+    blurb:"Test and validation for construction and forestry machines: −23% failure rates, −92% validation time.",
+    points:["Hydraulic and electromechanical systems for construction and forestry machines, in India.",
+            "Component-to-system test plans that cut failure rates by 23%.",
+            "Python test automation that cut validation time by 92%.",
+            "Received an Outstanding Team Award and 4 monthly recognition awards."] }
+];
+const EDU = [
+  { org:"San José State University", mono:"SJSU", logo:"assets/logos/sjsu.png", logoBg:"#0074ba", role:"M.S. Mechanical Engineering (Robotics)", when:"Aug 2025 – May 2027",
+    blurb:"Focus on dynamics, controls and robot learning. GPA 3.67.",
+    points:["Concentration in controls, mechatronics and robotics. GPA 3.67.",
+            "Coursework and projects: ME 297 Embodied Intelligence & Robot Learning (SO-101 arm), ME 285 Mechatronics (DC motor control), ME 282 (2-link arm control).",
+            "MS project in the BioRob Lab (Dr. Lin Jiang): orientation-independent RGB-D person tracking for the Jackie service robot."] },
+  { org:"SVNIT Surat", mono:"SVNIT", logo:"assets/logos/svnit.png", logoBg:"#000", role:"B.Tech Mechanical Engineering", when:"2018 – 2022",
+    blurb:"Mechanical engineering fundamentals. GPA 3.70.",
+    points:["Bachelor of Technology in Mechanical Engineering, GPA 3.70.",
+            "Led vehicle design for SAE Team Phoenix Racing alongside coursework."] },
+  { org:"SAE Team Phoenix Racing", mono:"SAE", logo:"assets/logos/phoenix.png", logoBg:"#000", role:"Design Engineering Head", when:"2019 – 2021",
+    blurb:"Led 25 people through two competition vehicles: a national win and two design patents.",
+    points:["Led a 25-person team through the design of two competition vehicles.",
+            "Electric go-kart: 1st of 50+ teams at e-GKDC 2020.",
+            "Formula Student car: national top 10 at Formula Bharat 2021.",
+            "Both vehicle designs were granted design patents."] }
+];
+
+
+/* ======================== rendering ======================== */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const brk = '<span class="brk a"></span><span class="brk b"></span><span class="brk c"></span><span class="brk d"></span>';
+
+// tag name -> icon (css/icons.css). Unlisted tags show a small dot.
+const ICONS = {"python":"python","c++":"cplusplus","c++17":"cplusplus","embedded c++":"cplusplus","ros 2":"ros","matlab":"matlab","simulink":"matlab",
+  "linux":"linux","git":"git","docker":"docker","opencv":"opencv","pytorch":"pytorch","arduino":"arduino","numpy":"numpy",
+  "mujoco":"cube","gazebo":"cube","stm32":"chip","libhal":"chip","i²c":"bus","can":"bus","hil testing":"chip","mediapipe":"eye",
+  "sac":"spark","stable-baselines3":"spark","lerobot":"arm","inverse kinematics":"arm","kinematics":"arm","retargeting":"arm",
+  "null-space ik":"arm","feedback linearization":"wave","lagrangian dynamics":"wave","pid + feedforward":"wave","system identification":"wave",
+  "ekf":"wave","lqr":"wave","mpc":"wave","cascade pd":"wave","admm qp solver":"chip","nonlinear simulation":"cube","filtering":"wave","nav2":"route","tf2":"axes","tactile sensing":"touch","complementary filter":"wave","ros":"ros","websockets":"route","depth camera":"eye","scikit-learn":"spark","signal processing":"wave","shared control":"route"};
+const tagHTML = t => `<li><i class="ic ic-${ICONS[t.toLowerCase()]||"dot"}" aria-hidden="true"></i>${esc(t)}</li>`;
+
+const mediaHTML = p => {
+  // mediaRows: several rows stacked (e.g. small squares on top, a wide chart below)
+  // mediaSide: one tall clip beside the stacked rows, sized so both columns end at the same height
+  if (p.mediaSide){
+    const sd = p.mediaSide, ar = r => r.reduce((a,m) => a + m.w/m.h, 0);
+    const stackH = p.mediaRows.reduce((a,r) => a + 1/ar(r), 0);   // stack height per unit width
+    const ratio = (stackH * sd.w / sd.h).toFixed(3);                // side width / stack width
+    return `<div class="media-split" style="grid-template-columns:minmax(0,${ratio}fr) minmax(0,1fr)">${mediaHTML({...p, mediaSide:null, mediaRows:null, media:[sd]})}${mediaHTML({...p, mediaSide:null})}</div>`;
+  }
+  if (p.mediaRows) return `<div class="media-stack">${p.mediaRows.map(r => mediaHTML({...p, mediaRows:null, media:r})).join("")}</div>`;
+  const items = Array.isArray(p.media) ? p.media : (p.media ? [{src:p.media, w:16, h:9}] : []);
+  if (!items.length && p.code) return `<div class="media code-media"><span class="code-file">SJSU_Robotics_Trial.ino</span><pre>${p.code}</pre></div>`;
+  if (!items.length) return `<div class="media empty band"><i class="ic ic-${({control:"wave",embedded:"chip",perception:"eye"})[(p.category||"").split(" ")[0]]||"cube"}" aria-hidden="true"></i><span>demo clip coming soon</span></div>`;
+  return `<div class="media-row" >${items.map(m => {
+    const isVid = /\.(mp4|webm)$/i.test(m.src);
+    const el = isVid
+      ? `<video src="${esc(m.src)}" poster="${esc(m.src.replace(/\.\w+$/, ".jpg"))}" width="${m.w}" height="${m.h}" data-autoplay preload="none" muted loop playsinline></video>`
+      : `<img src="${esc(m.src)}" width="${m.w}" height="${m.h}" alt="${esc(p.title)}" loading="lazy">`;
+    return `<figure class="${m.white?"white":""}" data-ar="${m.w}/${m.h}">${el}${m.label?`<figcaption>${esc(m.label)}</figcaption>`:""}</figure>`;
+  }).join("")}</div>`;
+};
+document.getElementById("project-list").innerHTML = PROJECTS.map(p => {
+  const media = mediaHTML(p);
+  const resultText = p.cardResult || p.resultText;
+  const details = p.caseStudy ? "" :
+    `<details><summary>Problem and approach</summary><dl class="pa"><dt>Problem</dt><dd>${esc(p.problem)}</dd><dt>Approach</dt><dd>${esc(p.approach)}</dd></dl></details>`;
+  const links = [
+    p.caseStudy ? `<a class="case-link" href="${esc(p.caseStudy)}">Read the case study</a>` : "",
+    ...p.links.map(l => `<a href="${esc(l.href)}">${/github\.com/.test(l.href)?'<i class="ic ic-github" aria-hidden="true"></i> ':""}${esc(l.label)}</a>`)
+  ].join("");
+  return `<article class="card reveal${p.feature?" feature":""}">${brk}
+    ${p.caseStudy?`<a class="media-link" href="${esc(p.caseStudy)}" aria-label="${esc(p.title)}: case study">${media}</a>`:media}
+    <div class="card-body">
+      <p class="cat">/${esc(p.category||"")}</p>
+      <h3>${esc(p.title)}</h3>
+      <p class="ctx">${esc(p.context)}</p>
+      <p class="summary">${esc(p.summary||p.problem)}</p>
+      <div class="result">${p.resultNum?`<span class="num" data-count="${esc(p.resultNum)}">${esc(p.resultNum)}</span>`:""}<span class="what">${esc(resultText)}</span></div>
+      <ul class="tags">${p.tags.slice(0,6).map(tagHTML).join("")}</ul>
+      ${details}
+      ${links?`<div class="links">${links}</div>`:""}
+    </div>
+  </article>`;
+}).join("");
+
+document.getElementById("stack-list").insertAdjacentHTML("beforeend", STACK.map(s =>
+  `<div class="layer"><h4>${esc(s.layer)}</h4><p>${esc(s.skills)}</p>
+   <div class="meter" role="img" aria-label="${Math.round(s.strength*100)}% depth"><i style="--w:${Math.round(s.strength*100)}%"></i></div></div>`
+).join(""));
+
+const orgCard = (o, i, kind) => `<article class="org reveal">
+  <div class="org-logo${o.logo?" has-img":""}"${o.logoBg?` style="background:${o.logoBg}"`:""}>${o.logo?`<img src="${esc(o.logo)}" alt="${esc(o.org)} logo"${o.logoW?` style="width:${o.logoW}"`:""}>`:`<span>${esc(o.mono)}</span>`}</div>
+  <div class="org-body">
+    <p class="when">${esc(o.when)}</p>
+    <h3>${esc(o.org)}</h3>
+    <p class="role">${esc(o.role)}</p>
+    <p class="blurb">${esc(o.blurb)}</p>
+    <button class="org-btn" data-kind="${kind}" data-i="${i}">Details</button>
+  </div></article>`;
+document.getElementById("work-cards").innerHTML = WORK.map((o,i) => orgCard(o,i,"work")).join("");
+document.getElementById("edu-cards").innerHTML = EDU.map((o,i) => orgCard(o,i,"edu")).join("");
+(() => {
+  const dlg = document.getElementById("org-dialog");
+  document.addEventListener("click", e => {
+    const b = e.target.closest(".org-btn"); if (!b) return;
+    const o = (b.dataset.kind==="work"?WORK:EDU)[+b.dataset.i];
+    document.getElementById("org-dialog-title").textContent = o.org;
+    document.getElementById("org-dialog-meta").textContent = o.role + " · " + o.when;
+    document.getElementById("org-dialog-logo").innerHTML = b.closest(".org").querySelector(".org-logo").innerHTML;
+    document.getElementById("org-dialog-logo").className = "od-logo" + (o.logo?" has-img":"");
+    document.getElementById("org-dialog-logo").style.background = o.logoBg || "";
+    document.getElementById("org-dialog-points").innerHTML = o.points.map(p => `<li>${esc(p)}</li>`).join("");
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+  });
+  document.getElementById("org-dialog-close").addEventListener("click", () => dlg.close ? dlg.close() : dlg.removeAttribute("open"));
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+})();
+
+/* ================= hero: 2-link inverse kinematics + LiDAR sweep ================= */
+(() => {
+  const cv = document.getElementById("arm"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, base = {x:W*0.5, y:H*0.84}, L1 = 290, L2 = 240;
+  const NEON = "#2BF5FF", LIME = "#C6FF3D";
+  let target = {x:base.x+200, y:base.y-300}, tip = {...target}, th = [-1.2, 1.0];
+  let pointer = null, lastMove = 0, t = 0, sweep = 0;
+  const trail = [], pts = [];
+  // fake environment for the LiDAR to "see": a few obstacles
+  const obstacles = [{x:150,y:250,r:46},{x:860,y:210,r:60},{x:790,y:560,r:38},{x:200,y:560,r:30}];
+
+  function ik(px, py){
+    let dx = px-base.x, dy = py-base.y, d = Math.hypot(dx,dy);
+    const maxR = L1+L2-1, minR = Math.abs(L1-L2)+1;
+    if (d > maxR){dx*=maxR/d;dy*=maxR/d;d=maxR;} if (d < minR){dx*=minR/d;dy*=minR/d;d=minR;}
+    const c2 = (d*d-L1*L1-L2*L2)/(2*L1*L2), q2 = -Math.acos(Math.max(-1,Math.min(1,c2)));
+    return [Math.atan2(dy,dx) - Math.atan2(L2*Math.sin(q2), L1+L2*Math.cos(q2)), q2];
+  }
+  const wrapA = a => Math.atan2(Math.sin(a), Math.cos(a));
+  const toCanvas = e => { const r = cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height}; };
+  cv.addEventListener("pointermove", e => { pointer = toCanvas(e); lastMove = performance.now(); document.getElementById("hint").style.opacity = 0; });
+  cv.addEventListener("pointerleave", () => pointer = null);
+
+  function castRay(a){ // returns hit distance against obstacles or walls
+    const dx = Math.cos(a), dy = Math.sin(a); let best = 2000;
+    for (const o of obstacles){ const fx = base.x-o.x, fy = base.y-o.y, b = fx*dx+fy*dy, c = fx*fx+fy*fy-o.r*o.r, disc = b*b-c;
+      if (disc > 0){ const s = -b-Math.sqrt(disc); if (s > 0 && s < best) best = s; } }
+    const tx = dx>0 ? (W-base.x)/dx : dx<0 ? -base.x/dx : 1e9, ty = dy<0 ? -base.y/dy : 1e9;
+    return Math.min(best, tx, ty);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // LiDAR sweep wedge
+    const g = ctx.createRadialGradient(base.x,base.y,0,base.x,base.y,700);
+    g.addColorStop(0,"rgba(43,245,255,.16)"); g.addColorStop(1,"rgba(43,245,255,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(base.x,base.y); ctx.arc(base.x,base.y,700,sweep-.35,sweep); ctx.closePath(); ctx.fill();
+    // point cloud
+    for (let i = pts.length-1; i >= 0; i--){ const p = pts[i]; p.life -= .006;
+      if (p.life <= 0){ pts.splice(i,1); continue; }
+      ctx.fillStyle = `rgba(43,245,255,${p.life*.85})`; ctx.fillRect(p.x-2,p.y-2,4,4); }
+    // range rings
+    ctx.strokeStyle = "rgba(255,255,255,.06)"; ctx.lineWidth = 1;
+    for (const r of [180,360,540]){ ctx.beginPath(); ctx.arc(base.x,base.y,r,Math.PI,2*Math.PI); ctx.stroke(); }
+    // reach envelope
+    ctx.setLineDash([6,10]); ctx.strokeStyle = "rgba(43,245,255,.25)";
+    ctx.beginPath(); ctx.arc(base.x,base.y,L1+L2,Math.PI,2*Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    // trail
+    ctx.lineCap = "round";
+    for (let i = 1; i < trail.length; i++){ ctx.strokeStyle = `rgba(198,255,61,${i/trail.length*.8})`; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(trail[i-1].x,trail[i-1].y); ctx.lineTo(trail[i].x,trail[i].y); ctx.stroke(); }
+    // target reticle
+    ctx.strokeStyle = LIME; ctx.lineWidth = 2; ctx.shadowColor = LIME; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(target.x,target.y,13,0,7);
+    ctx.moveTo(target.x-26,target.y); ctx.lineTo(target.x-17,target.y); ctx.moveTo(target.x+17,target.y); ctx.lineTo(target.x+26,target.y);
+    ctx.moveTo(target.x,target.y-26); ctx.lineTo(target.x,target.y-17); ctx.moveTo(target.x,target.y+17); ctx.lineTo(target.x,target.y+26); ctx.stroke();
+    // arm
+    const j1 = {x:base.x+L1*Math.cos(th[0]), y:base.y+L1*Math.sin(th[0])};
+    tip = {x:j1.x+L2*Math.cos(th[0]+th[1]), y:j1.y+L2*Math.sin(th[0]+th[1])};
+    const link = (a,b,w) => { ctx.shadowBlur = 0; ctx.strokeStyle = "#1C242C"; ctx.lineWidth = w;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      ctx.shadowColor = NEON; ctx.shadowBlur = 14; ctx.strokeStyle = NEON; ctx.lineWidth = 2;
+      const ang = Math.atan2(b.y-a.y,b.x-a.x), nx = -Math.sin(ang)*w/2, ny = Math.cos(ang)*w/2;
+      ctx.beginPath(); ctx.moveTo(a.x+nx,a.y+ny); ctx.lineTo(b.x+nx,b.y+ny); ctx.moveTo(a.x-nx,a.y-ny); ctx.lineTo(b.x-nx,b.y-ny); ctx.stroke(); };
+    link(base,j1,34); link(j1,tip,24);
+    ctx.shadowBlur = 0; ctx.fillStyle = "#1C242C"; ctx.fillRect(base.x-95,base.y+20,190,20);
+    ctx.strokeStyle = "rgba(43,245,255,.6)"; ctx.lineWidth = 2; ctx.strokeRect(base.x-95,base.y+20,190,20);
+    const joint = (p,r) => { ctx.fillStyle = "#0E1216"; ctx.shadowColor = NEON; ctx.shadowBlur = 18;
+      ctx.beginPath(); ctx.arc(p.x,p.y,r,0,7); ctx.fill(); ctx.strokeStyle = NEON; ctx.lineWidth = 3; ctx.stroke();
+      ctx.shadowBlur = 0; ctx.fillStyle = LIME; ctx.beginPath(); ctx.arc(p.x,p.y,r*.28,0,7); ctx.fill(); };
+    joint(base,30); joint(j1,22);
+    const a = th[0]+th[1], ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+    ctx.strokeStyle = NEON; ctx.lineWidth = 6; ctx.shadowColor = NEON; ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.moveTo(tip.x+nx*18,tip.y+ny*18); ctx.lineTo(tip.x+nx*18+ux*28,tip.y+ny*18+uy*28);
+    ctx.moveTo(tip.x-nx*18,tip.y-ny*18); ctx.lineTo(tip.x-nx*18+ux*28,tip.y-ny*18+uy*28);
+    ctx.moveTo(tip.x+nx*18,tip.y+ny*18); ctx.lineTo(tip.x-nx*18,tip.y-ny*18); ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  const t1 = document.getElementById("t1"), t2 = document.getElementById("t2"), mode = document.getElementById("mode");
+  const show = () => { t1.textContent = (-th[0]*180/Math.PI).toFixed(1)+"°"; t2.textContent = (-th[1]*180/Math.PI).toFixed(1)+"°"; };
+  function step(){
+    const following = pointer && performance.now()-lastMove < 2500;
+    if (following) target = pointer;
+    else { t += .012; const s = Math.sin(t), c = Math.cos(t), k = 1+s*s; target = {x:base.x+260*c/k, y:base.y-330+150*s*c/k}; }
+    const goal = ik(target.x,target.y);
+    for (let i = 0; i < 2; i++) th[i] += Math.max(-.08, Math.min(.08, wrapA(goal[i]-th[i])*.14));
+    trail.push({...tip}); if (trail.length > 80) trail.shift();
+    // LiDAR: sweep across the upper half, drop points where rays hit
+    sweep += .035; if (sweep > 2*Math.PI) sweep = Math.PI;
+    if (sweep < Math.PI) sweep = Math.PI;
+    for (let k = 0; k < 3; k++){ const ang = sweep - k*.012, d = castRay(ang);
+      if (d < 1500) pts.push({x:base.x+Math.cos(ang)*d, y:base.y+Math.sin(ang)*d, life:1}); }
+    draw(); show();
+    mode.textContent = following ? "tracking: pointer" : "auto: figure-8";
+    requestAnimationFrame(step);
+  }
+  if (reduce){ th = ik(target.x,target.y); draw(); show(); mode.textContent = "static";
+    cv.addEventListener("pointermove", e => { target = toCanvas(e); th = ik(target.x,target.y); draw(); show(); }); }
+  else requestAnimationFrame(step);
+})();
+</script>
+<script src="js/site.js"></script>
+</body>
+</html>

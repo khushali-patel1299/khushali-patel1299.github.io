@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Following people who aren't facing the robot: RGB-D tracking for Jackie — Khushali Patel</title>
+<meta name="description" content="MS project: orientation-independent RGB-D person tracking for the Jackie service robot. Mapping a vendor ROS1 stack non-invasively, characterizing an unused depth camera, and measuring its advantage over face-based following.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/icons.css">
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-glow" aria-hidden="true"></div>
+<ul class="social-rail" aria-label="Contact links"><li><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+<div class="page">
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="../index.html"><i aria-hidden="true"></i>Khushali Patel</a>
+    <div class="nav-right">
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="../index.html#projects">All projects</a></li>
+        <li class="hide-sm"><a href="#roadmap">Roadmap</a></li>
+        <li class="hide-sm"><a href="#results">Results</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-social"><li class=""><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li class=""><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li class=""><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li class="opt"><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <section class="case-hero">
+    <div class="wrap">
+      <a class="back" href="../index.html#projects">← All projects</a>
+      <p class="topic" style="margin-top:28px">/projects/jackie-rgbd</p>
+      <h1>Giving a service robot a way to follow people <span class="scr" id="scramble">who aren't facing it</span></h1>
+      <p class="lede">Jackie is a concierge service robot that follows people by seeing their face. Turn away, walk side-on or step a little too far, and it loses you. My MS project adds person tracking from the robot's depth camera, connected to Jackie's existing software without changing any vendor code.</p>
+      <dl class="facts">
+        <div><dt>Project</dt><dd>MS project, BioRob Lab (advisor Dr. Lin Jiang), SJSU</dd></div>
+        <div><dt>Robot</dt><dd>Jackie concierge robot: vendor ROS1 chassis, depth camera, Android tablet</dd></div>
+        <div><dt>Stack</dt><dd>Python asyncio, ROS1 / rosbridge, WebSockets, OpenCV, NumPy</dd></div>
+        <div><dt>Status</dt><dd>In progress: tracker and comparison trials December 2026</dd></div>
+      </dl>
+      <div class="fit-row reveal" style="max-width:880px">
+            <figure class="clip" data-ar="720/1280"><video src="../assets/jackie/jackie_live.mp4" poster="../assets/jackie/jackie_live.jpg" width="720" height="1280" data-autoplay preload="none" muted loop playsinline></video><figcaption><b>live</b> first tests with Jackie in the lab</figcaption></figure>
+            <figure class="clip white" data-ar="1190/918"><img src="../assets/jackie/face_vs_depth.jpg" width="1190" height="918" alt="Turned away, the face camera sees hair; the depth camera still sees the person" loading="lazy"><figcaption>the problem in one picture: turned away, the face camera sees hair; the depth camera still sees the person</figcaption></figure>
+          </div>
+    </div>
+  </section>
+
+  <section id="roadmap" style="padding-top:48px">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/roadmap</p>
+        <h2>From an unfamiliar robot to a measured case for depth</h2>
+        <p class="sub">The first four stages are done. The tracker itself is next.</p>
+      </div>
+      <ol class="roadmap reveal"><li><a href="#stage-1" data-stage-link="stage-1"><span class="node">01</span><h3>Map the stack</h3><p>Vendor ROS1, app, server</p></a></li><li><a href="#stage-2" data-stage-link="stage-2"><span class="node">02</span><h3>Find the depth camera</h3><p>640×480 depth, 2 Hz, no cost</p></a></li><li><a href="#stage-3" data-stage-link="stage-3"><span class="node">03</span><h3>Why depth</h3><p>Works when you turn away</p></a></li><li><a href="#stage-4" data-stage-link="stage-4"><span class="node">04</span><h3>Measure the range</h3><p>0.5–2.0 m vs. 1.25 m</p></a></li><li><a href="#stage-5" data-stage-link="stage-5"><span class="node">05</span><h3>Track and follow</h3><p>Kalman tracker, then trials</p></a></li></ol>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap stages">
+      <ol class="rail" aria-label="Stages"><li><a href="#stage-1" data-stage-link="stage-1"><span>01</span>Map the stack</a></li><li><a href="#stage-2" data-stage-link="stage-2"><span>02</span>Find the depth camera</a></li><li><a href="#stage-3" data-stage-link="stage-3"><span>03</span>Why depth</a></li><li><a href="#stage-4" data-stage-link="stage-4"><span>04</span>Measure the range</a></li><li><a href="#stage-5" data-stage-link="stage-5"><span>05</span>Track and follow</a></li><li><a href="#results" data-stage-link="results"><span>→</span>Results</a></li></ol>
+      <div>
+        <article class="stage" id="stage-1">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">01</span><h2>Map a robot stack I'm not allowed to change</h2></div>
+            <p class="goal">Understand how Jackie's tablet app, Python server and vendor chassis talk to each other, without touching vendor code.</p>
+          </div>
+          <div class="fit-row reveal" data-maxh="520">
+            <figure class="clip white" data-ar="1600/675"><img src="../assets/jackie/architecture.jpg" width="1600" height="675" alt="data flow as mapped: tablet app, vendor ROS1 chassis, SMAIT server and Cockpit dashboard; dashed = direct Ethernet path" loading="lazy"><figcaption>data flow as mapped: tablet app, vendor ROS1 chassis, SMAIT server and Cockpit dashboard; dashed = direct Ethernet path</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>Jackie's person-following runs through three pieces: an Android app on the tablet (with the RGB camera), the lab's SMAIT Python server (event bus, face tracker, follow controller), and the vendor's ROS1 chassis behind rosbridge, plus a Cockpit monitoring dashboard. I traced the full data flow, then wrote diagnostic modules that plug into the server's event bus and can be switched on and off. Through the app's relay, a discovery module found <b>297 ROS topics</b> on the robot: navigation, costmaps, LiDAR, pose and a depth camera.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>ROS1 / rosbridge</li><li>Python asyncio</li><li>WebSockets</li><li>Reverse-engineering a software stack</li><li>Non-invasive integration</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The chassis software is vendor-controlled, so changing it was off the table.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Built read-only probe modules that live inside the existing server and toggle with a flag, so nothing on the robot changes.</p></div></li><li class="issue"><div class="p"><b>problem</b><p>The lab PC reaches the robot only through the app's relay, which limits bandwidth.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Opened the robot and found its internal network switch. A laptop plugged in there reaches the chassis's ROS bridge directly, bypassing the relay.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-2">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">02</span><h2>Find and characterize the depth camera</h2></div>
+            <p class="goal">The existing follower only used the tablet's RGB camera. Was there something better on board?</p>
+          </div>
+          <div class="fit-row reveal" data-maxh="420">
+            <figure class="clip white" data-ar="1280/600"><img src="../assets/jackie/fps.jpg" width="1280" height="600" alt="RGB video holds ~15 FPS while full-resolution depth streams at 2 Hz" loading="lazy"><figcaption>RGB video holds ~15 FPS while full-resolution depth streams at 2 Hz</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>The topic list showed an <code>/upcamera</code> the existing follower never used: a depth camera publishing 640×480, 16-bit depth in millimetres, a point cloud and calibration (focal length ≈ 578 px, about 58° × 45° field of view). I wrote probes that subscribe at a set rate, save synchronized depth + RGB frame pairs with calibration, and log rate, message size and timestamp lag.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Camera intrinsics</li><li>Depth images</li><li>Bandwidth measurement</li><li>Data logging</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>Each depth frame is about 820 kB as JSON. Streaming it could starve the RGB video the current follower depends on.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Measured it: 120 s of full-resolution depth at 2 Hz arrived with zero drops, and the RGB video held steady at about 15 FPS.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-3">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">03</span><h2>Show why depth matters: orientation independence</h2></div>
+            <p class="goal">The face-based follower fails the moment the user turns away.</p>
+          </div>
+          <div class="fit-row reveal" data-maxh="560">
+            <figure class="clip white" data-ar="1190/918"><img src="../assets/jackie/face_vs_depth.jpg" width="1190" height="918" alt="same moments, both cameras: turned away, the RGB camera sees only hair; depth still sees a clean head-and-shoulders silhouette" loading="lazy"><figcaption>same moments, both cameras: turned away, the RGB camera sees only hair; depth still sees a clean head-and-shoulders silhouette</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>I recorded three datasets, about 540 RGB + depth frame pairs, with the user facing the robot, turned away, side-on and at measured distances. The figure shows the core argument: when the user turns away, the face camera has nothing to track, while the depth camera still sees the person's shape.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Experimental design</li><li>RGB vs. depth sensing</li><li>Human–robot interaction</li></ul>
+            
+          </div>
+        </article>
+        <article class="stage" id="stage-4">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">04</span><h2>Measure the range</h2></div>
+            <p class="goal">Put numbers on how much better depth is, with a tape measure.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1280/640"><img src="../assets/jackie/range_chart.jpg" width="1280" height="640" alt="person size in the depth image at each tape mark: visible to 2.0 m; the RGB face is lost after ~1.25 m" loading="lazy"><figcaption>person size in the depth image at each tape mark: visible to 2.0 m; the RGB face is lost after ~1.25 m</figcaption></figure>
+            <figure class="clip white" data-ar="960/720"><img src="../assets/jackie/range_grid.jpg" width="960" height="720" alt="RGB (left) and depth (right) at each tape mark" loading="lazy"><figcaption>RGB (left) and depth (right) at each tape mark</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What I built</h3>
+            <p>With tape marks every 0.25 m, I measured how much of the person the depth camera sees at each distance, using background subtraction and connected components. A standing adult stays trackable from about 0.5 m to 2.0 m at any orientation. The face camera loses the face past about 1.25 m, and only works when the user faces the robot. That's roughly double the trackable range, and it sets a recommended following distance of 1.0–1.25 m.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Background subtraction</li><li>Connected components</li><li>Camera geometry</li><li>Measurement error analysis</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>Depth readings came out 12–15% shorter than the tape measure.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Traced it to geometry: the camera is tilted about 30°, so depth is measured along the tilted optical axis, not horizontally. Correctable with the camera's pose.</p></div></li><li class="issue"><div class="p"><b>problem</b><p>Close up, the depth image goes black.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>The camera is blind closer than about 0.4 m, which sets the near limit of the following distance.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-5">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">05</span><h2>Next: track, follow, compare</h2></div>
+            <p class="goal">What's left, and when.</p>
+          </div>
+          
+          <div class="reveal">
+            <h3>The plan</h3>
+            <p>Next is a depth-based person detector with a Kalman tracker, developed offline on the recorded data, then run live on Jackie for at least 12 comparison trials against the face-based follower (early December 2026). Obstacle-aware following, integrated with Jackie's navigation where its interfaces allow, follows in spring 2027.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Kalman filtering</li><li>Person detection in depth</li><li>A/B evaluation</li><li>Obstacle-aware following</li></ul>
+            
+          </div>
+        </article>
+        <article class="stage" id="results" style="padding-bottom:24px">
+          <div class="reveal">
+            <p class="topic">/results</p>
+            <h2>Results so far</h2>
+            <p class="goal">Measured, before writing the tracker: depth is the right sensor, and it's free to stream.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><span class="num" data-count="~2×">~2×</span><span>trackable range: 0.5–2.0 m with depth vs. about 1.25 m for the face camera, at any orientation</span></div>
+            <div class="stat"><span class="num" data-count="297">297</span><span>ROS topics discovered on a vendor robot without changing its software</span></div>
+            <div class="stat"><span class="num" data-count="15 FPS">15 FPS</span><span>RGB video held steady while full-resolution depth streamed at 2 Hz</span></div>
+          </div>
+          <p class="note reveal">Tools written so far: a ROS topic discovery module, a depth probe that saves synchronized depth + RGB pairs with calibration, a topic probe for rates and timestamp lag, a direct-link bandwidth test, and analysis scripts for range estimation. Plus a lab runbook and a map of the codebase.</p>
+          <div class="next reveal">
+            <a class="back" href="../index.html#projects">← All projects</a>
+            <a class="btn ghost" href="../index.html#contact">Talk to me about this project</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Khushali Patel · Robotics software engineering portfolio</div>
+</footer>
+</div>
+<script src="../js/site.js"></script>
+</body>
+</html>

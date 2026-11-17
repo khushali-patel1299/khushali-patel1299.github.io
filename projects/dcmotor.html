@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DC motor velocity and position control — Khushali Patel</title>
+<meta name="description" content="System identification of a real DC motor from open-loop step tests, then PID velocity and encoder position control on Arduino, compared against a calibrated Simulink model.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/icons.css">
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grid-glow" aria-hidden="true"></div>
+<ul class="social-rail" aria-label="Contact links"><li><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+<div class="page">
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="../index.html"><i aria-hidden="true"></i>Khushali Patel</a>
+    <div class="nav-right">
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="../index.html#projects">All projects</a></li>
+        <li class="hide-sm"><a href="#roadmap">Roadmap</a></li>
+        <li class="hide-sm"><a href="#results">Results</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-social"><li class=""><a href="https://github.com/khushali-patel1299" aria-label="GitHub" title="GitHub"><i class="ic ic-github" aria-hidden="true"></i></a></li><li class=""><a href="https://www.linkedin.com/in/khushali-g-patel" aria-label="LinkedIn" title="LinkedIn"><i class="ic ic-linkedin" aria-hidden="true"></i></a></li><li class=""><a href="mailto:khushali.patel1299@gmail.com" aria-label="Email" title="Email"><i class="ic ic-mail" aria-hidden="true"></i></a></li><li class="opt"><a href="../resume.pdf" aria-label="Résumé (PDF)" title="Résumé (PDF)"><i class="ic ic-doc" aria-hidden="true"></i></a></li></ul>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <section class="case-hero">
+    <div class="wrap">
+      <a class="back" href="../index.html#projects">← All projects</a>
+      <p class="topic" style="margin-top:28px">/projects/dc-motor</p>
+      <h1>DC motor control: make the model <span class="scr" id="scramble">match the motor</span></h1>
+      <p class="lede">Two labs with one motor: speed control with a tachometer, then position control with an encoder. The first model was 6.5× too fast. Fitting it to a single oscilloscope step test brought the model's closed-loop prediction within 6% of the hardware.</p>
+      <dl class="facts">
+        <div><dt>Course</dt><dd>ME 285 Mechatronics, SJSU, Fall 2025 (with Pooja Tiwari)</dd></div>
+        <div><dt>Hardware</dt><dd>DC motor, tachometer, quadrature encoder, H-bridge, Arduino, RC filters</dd></div>
+        <div><dt>Stack</dt><dd>MATLAB, Simulink, PID Tuner, Arduino C++, Keysight oscilloscope</dd></div>
+        <div><dt>Outcome</dt><dd>Closed-loop rise 250 ms on hardware vs. 265 ms predicted; zero steady-state position error</dd></div>
+      </dl>
+      <div class="fit-row reveal">
+            <figure class="clip" data-ar="1200/1600"><img src="../assets/dcmotor/setup_position.jpg" width="1200" height="1600" alt="the bench: motor, encoder, H-bridge, Arduino" loading="lazy"><figcaption>the bench: motor, encoder, H-bridge, Arduino</figcaption></figure>
+            <figure class="clip" data-ar="800/489"><img src="../assets/dcmotor/scope_closed_loop.jpg" width="800" height="489" alt="closed-loop velocity step on the real motor" loading="lazy"><figcaption>closed-loop velocity step on the real motor</figcaption></figure>
+            <figure class="clip white" data-ar="1400/1018"><img src="../assets/dcmotor/sim_closed_loop.jpg" width="1400" height="1018" alt="the calibrated model's prediction" loading="lazy"><figcaption>the calibrated model's prediction</figcaption></figure>
+          </div>
+    </div>
+  </section>
+
+  <section id="roadmap" style="padding-top:48px">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="topic">/roadmap</p>
+        <h2>Model, measure, fix the model, control</h2>
+        <p class="sub">Stages 1–4 are the velocity lab; stage 5 is the position lab, built on the identified model.</p>
+      </div>
+      <ol class="roadmap reveal"><li><a href="#stage-1" data-stage-link="stage-1"><span class="node">01</span><h3>Model</h3><p>Simulink from the datasheet</p></a></li><li><a href="#stage-2" data-stage-link="stage-2"><span class="node">02</span><h3>Measure</h3><p>Open-loop step on the scope</p></a></li><li><a href="#stage-3" data-stage-link="stage-3"><span class="node">03</span><h3>Identify</h3><p>Fit J and b, retune</p></a></li><li><a href="#stage-4" data-stage-link="stage-4"><span class="node">04</span><h3>Velocity loop</h3><p>Model vs. hardware</p></a></li><li><a href="#stage-5" data-stage-link="stage-5"><span class="node">05</span><h3>Position loop</h3><p>Encoder, stiction, gains</p></a></li></ol>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap stages">
+      <ol class="rail" aria-label="Stages"><li><a href="#stage-1" data-stage-link="stage-1"><span>01</span>Model</a></li><li><a href="#stage-2" data-stage-link="stage-2"><span>02</span>Measure</a></li><li><a href="#stage-3" data-stage-link="stage-3"><span>03</span>Identify</a></li><li><a href="#stage-4" data-stage-link="stage-4"><span>04</span>Velocity loop</a></li><li><a href="#stage-5" data-stage-link="stage-5"><span>05</span>Position loop</a></li><li><a href="#results" data-stage-link="results"><span>→</span>Results</a></li></ol>
+      <div>
+        <article class="stage" id="stage-1">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">01</span><h2>Model the motor from its datasheet</h2></div>
+            <p class="goal">A Simulink model to design the controller before touching hardware.</p>
+          </div>
+          <div class="fit-row reveal" data-maxh="380">
+            <figure class="clip white" data-ar="1400/596"><img src="../assets/dcmotor/sim_velocity_model.jpg" width="1400" height="596" alt="velocity loop: PID, H-bridge, motor model, tachometer gain and 10 Hz low-pass filter" loading="lazy"><figcaption>velocity loop: PID, H-bridge, motor model, tachometer gain and 10 Hz low-pass filter</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What we built</h3>
+            <p>We built the motor as an armature circuit (resistance 1.2 Ω, inductance 0.49 mH) driving the rotor's inertia, with a tachometer feeding back through a 10 Hz low-pass filter. The model works in volts, the way the Arduino sees the signals (8000 RPM ≈ 1.14 V). Tuning it with MATLAB's PID tuner gave P = 7.77, I = 184.9, D = 0.064: about 42 ms rise time, 7% overshoot, and comfortable stability margins (39 dB gain, 69° phase).</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>DC motor dynamics</li><li>Transfer functions</li><li>Simulink</li><li>PID tuning</li><li>Gain and phase margins</li></ul>
+            
+          </div>
+        </article>
+        <article class="stage" id="stage-2">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">02</span><h2>Measure the real motor</h2></div>
+            <p class="goal">Check the model against the hardware with the simplest test that works.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip" data-ar="934/720"><img src="../assets/dcmotor/setup_velocity.jpg" width="934" height="720" alt="Arduino, H-bridge, motor with tachometer and RC filter" loading="lazy"><figcaption>Arduino, H-bridge, motor with tachometer and RC filter</figcaption></figure>
+            <figure class="clip" data-ar="800/489"><img src="../assets/dcmotor/scope_open_loop.jpg" width="800" height="489" alt="real motor: open-loop step on the oscilloscope" loading="lazy"><figcaption>real motor: open-loop step on the oscilloscope</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What we built</h3>
+            <p>The hardware: an Arduino driving the motor through an H-bridge, a tachometer for speed, and an RC low-pass filter (3.3 kΩ, 4.7 µF, about 10 Hz) to clean the signal before the Arduino reads it. We applied a 0 → 50% PWM step and captured the speed on the oscilloscope. For a first-order system like this, one step response gives the time constant and gain directly from the 63% point, with no frequency sweep needed.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Open-loop step response</li><li>Time constant (63% rule)</li><li>RC low-pass filtering</li><li>Oscilloscope measurement</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The model and the motor disagreed badly: the model's time constant was 54 ms, the real motor's 350 ms. The model was 6.5× too fast.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Treated it as a system identification problem: keep the model's structure, but fit its mechanical parameters to the measured response.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-3">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">03</span><h2>Identify the real parameters, then retune</h2></div>
+            <p class="goal">Make the model match the motor, so the controller designed on it works on hardware.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1218/800"><img src="../assets/dcmotor/sim_open_loop_initial.jpg" width="1218" height="800" alt="model's open-loop response before calibration (rise in ~0.12 s)" loading="lazy"><figcaption>model's open-loop response before calibration (rise in ~0.12 s)</figcaption></figure>
+            <figure class="clip white" data-ar="1400/787"><img src="../assets/dcmotor/pid_tuner.jpg" width="1400" height="787" alt="retuning PID on the calibrated model" loading="lazy"><figcaption>retuning PID on the calibrated model</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What we built</h3>
+            <p>We recalculated the total inertia J to force the model's time constant to the measured 350 ms, then tuned viscous friction b to match the steady-state gain and the slight overshoot, iterating between the two because each affects both. Final values: J = 1.11 × 10⁻⁵ kg·m² (about 10× the datasheet's rotor-plus-tachometer figure) and b = 1.0 × 10⁻⁵ N·m·s/rad. The calibrated model's open-loop rise time is 794 ms against 770 ms measured. Retuning on it gave P = 9.16, I = 46.3, D = 0.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>System identification</li><li>Parameter fitting</li><li>Model validation</li><li>Controller retuning</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The datasheet inertia only covers the rotor and tachometer, not everything attached to the shaft.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Fitted J from the measured time constant instead of trusting the datasheet. It came out about 10× larger.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-4">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">04</span><h2>Close the velocity loop on hardware</h2></div>
+            <p class="goal">Run the retuned PID on the Arduino and compare with the model.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip white" data-ar="1400/1018"><img src="../assets/dcmotor/sim_closed_loop.jpg" width="1400" height="1018" alt="calibrated model: closed-loop step, rise 265 ms" loading="lazy"><figcaption>calibrated model: closed-loop step, rise 265 ms</figcaption></figure>
+            <figure class="clip" data-ar="800/489"><img src="../assets/dcmotor/scope_closed_loop.jpg" width="800" height="489" alt="real motor: closed-loop step, rise 250 ms" loading="lazy"><figcaption>real motor: closed-loop step, rise 250 ms</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What we built</h3>
+            <p>With the retuned gains, the real motor's closed-loop rise time was 250 ms against the model's 265 ms, a 6% difference, with zero steady-state error and clean settling. The model had been off by 6.5× before identification.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Closed-loop PID on a microcontroller</li><li>Sim-to-real comparison</li><li>Steady-state error</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>The model still predicts a slightly sharper start than the motor delivers.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Expected: the model assumes unlimited voltage and current, while the real H-bridge saturates. The gains were robust to that anyway.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="stage-5">
+          <div class="reveal">
+            <div class="stage-head"><span class="stage-num">05</span><h2>Position control with the encoder</h2></div>
+            <p class="goal">Turn the motor to an exact angle (4 rad) and stop there.</p>
+          </div>
+          <div class="fit-row reveal">
+            <figure class="clip" data-ar="1200/1600"><img src="../assets/dcmotor/setup_position.jpg" width="1200" height="1600" alt="encoder, H-bridge and filter wiring" loading="lazy"><figcaption>encoder, H-bridge and filter wiring</figcaption></figure>
+            <figure class="clip" data-ar="800/489"><img src="../assets/dcmotor/scope_position.jpg" width="800" height="489" alt="real motor: position (green) and velocity (yellow) during a position step" loading="lazy"><figcaption>real motor: position (green) and velocity (yellow) during a position step</figcaption></figure>
+            <figure class="clip white" data-ar="1400/979"><img src="../assets/dcmotor/sim_position_final_gains.jpg" width="1400" height="979" alt="model with the final hardware gains" loading="lazy"><figcaption>model with the final hardware gains</figcaption></figure>
+          </div>
+          <div class="reveal">
+            <h3>What we built</h3>
+            <p>The motor's quadrature encoder gives 20 pulses per revolution, so 80 counts per revolution with all four edges: 12.73 counts per radian, and the 4 rad target is 50.93 counts. We reused J and b from the velocity lab, designed the position PID in Simulink (P = 0.31, I = 0.20, D = 0.095), and ran it on the Arduino at a 10 ms loop.</p>
+            <h3>Concepts</h3>
+            <ul class="chips"><li>Quadrature encoders</li><li>Position PID</li><li>Static friction (stiction)</li><li>Derivative filtering</li><li>Discrete-time control</li></ul>
+            <h3>Challenges and fixes</h3>
+            <ul class="issues">
+              <li class="issue"><div class="p"><b>problem</b><p>With the Simulink gains the motor stalled short of the target: the linear model has no static friction, so the gains were far too weak to break it.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b>fix</b><p>Raised the gains on hardware until the motor reached the target reliably: P = 12, I = 0.5, D = 1. Zero steady-state error.</p></div></li><li class="issue"><div class="p"><b>problem</b><p>The high gains cause fast oscillations in velocity while the motor is moving, and the H-bridge overheated under the high power demand.</p></div><div class="arrow" aria-hidden="true"></div>
+                <div class="f"><b class="found">lesson</b><p>Accepted the oscillation as the trade-off for reaching the target, and listed what the model would need to predict it: encoder and load inertia, the derivative filter's phase lag, and a zero-order hold for the 10 ms loop.</p></div></li>
+            </ul>
+          </div>
+        </article>
+        <article class="stage" id="results" style="padding-bottom:24px">
+          <div class="reveal">
+            <p class="topic">/results</p>
+            <h2>Results</h2>
+            <p class="goal">One step test turned a model that was 6.5× off into one that predicts the hardware within 6%.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><span class="num" data-count="6.5×">6.5×</span><span>how much too fast the datasheet model was (54 ms vs. 350 ms time constant)</span></div>
+            <div class="stat"><span class="num" data-count="6%">6%</span><span>closed-loop rise time difference after identification: 250 ms measured vs. 265 ms predicted</span></div>
+            <div class="stat"><span class="num" data-count="0">0</span><span>steady-state position error at the 4 rad target with the hardware-tuned gains</span></div>
+          </div>
+          <div class="next reveal">
+            <a class="back" href="../index.html#projects">← All projects</a>
+            <a class="btn ghost" href="../index.html#contact">Talk to me about this project</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Khushali Patel · Robotics software engineering portfolio</div>
+</footer>
+</div>
+<script src="../js/site.js"></script>
+</body>
+</html>
