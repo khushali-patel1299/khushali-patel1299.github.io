@@ -262,13 +262,13 @@ const PROJECTS = [
   {
     title: "Smart walker: predicting where the user wants to go",
     category: "assistive robotics / machine learning",
-    summary: "Thesis project with the SJSU ARMS Lab: classify forward, left, right and stop from handlebar force-torque and IMU signals, and feed the classifier's confidence into the walker's ROS 2 shared control.",
-    context: "ME 291 research proposal, ARMS Lab (Prof. M. Sharifi) · Python, ROS 2 · Jun 2026 – May 2027",
+    summary: "A semester of research in the SJSU ARMS Lab: I proposed classifying a walker user's intent (forward, left, right, stop) from handlebar force-torque and IMU signals, and built the processing and classification pipeline on surrogate data.",
+    context: "ARMS Lab (Prof. M. Sharifi), SJSU · ME 291 research proposal · Python · Spring 2026",
     problem: "The walker reads user intent with hand-tuned force rules that break across users and conditions.",
-    approach: "Built the full pipeline on surrogate 100 Hz force data first: Butterworth filtering, offset correction, dead-zone thresholding, 0.5 s sliding-window features, and four classifiers compared per class. Next: real data from participants and a ROS 2 node under 50 ms latency.",
+    approach: "Wrote the research proposal and built the full pipeline on surrogate 100 Hz force data: Butterworth filtering, offset correction, dead-zone thresholding, 0.5 s sliding-window features, and four classifiers compared per class. The proposal planned real-participant data and a ROS 2 shared-control node as follow-on work.",
     resultNum: "98%",
-    resultText: "four-class accuracy on surrogate data across all four models; target on real data is 85% or better",
-    tags: ["Python", "scikit-learn", "ROS 2", "Signal processing", "Shared control"],
+    resultText: "four-class accuracy on surrogate (simulated) force data, across all four models",
+    tags: ["Python", "scikit-learn", "Signal processing", "Classification", "Research proposal"],
     media: [{src:"assets/walker/preprocessing.jpg", w:1536, h:754, white:true}],
     links: []
   },
@@ -371,7 +371,7 @@ const ICONS = {"python":"python","c++":"cplusplus","c++17":"cplusplus","embedded
   "mujoco":"cube","gazebo":"cube","stm32":"chip","libhal":"chip","i²c":"bus","can":"bus","hil testing":"chip","mediapipe":"eye",
   "sac":"spark","stable-baselines3":"spark","lerobot":"arm","inverse kinematics":"arm","kinematics":"arm","retargeting":"arm",
   "null-space ik":"arm","feedback linearization":"wave","lagrangian dynamics":"wave","pid + feedforward":"wave","system identification":"wave",
-  "ekf":"wave","lqr":"wave","mpc":"wave","cascade pd":"wave","admm qp solver":"chip","nonlinear simulation":"cube","filtering":"wave","nav2":"route","tf2":"axes","tactile sensing":"touch","complementary filter":"wave","ros":"ros","websockets":"route","depth camera":"eye","scikit-learn":"spark","signal processing":"wave","shared control":"route"};
+  "ekf":"wave","lqr":"wave","mpc":"wave","cascade pd":"wave","admm qp solver":"chip","nonlinear simulation":"cube","filtering":"wave","nav2":"route","tf2":"axes","tactile sensing":"touch","complementary filter":"wave","ros":"ros","websockets":"route","depth camera":"eye","scikit-learn":"spark","signal processing":"wave","shared control":"route","classification":"spark","research proposal":"doc"};
 const tagHTML = t => `<li><i class="ic ic-${ICONS[t.toLowerCase()]||"dot"}" aria-hidden="true"></i>${esc(t)}</li>`;
 
 const mediaHTML = p => {
