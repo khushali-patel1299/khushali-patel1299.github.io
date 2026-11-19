@@ -516,3 +516,16 @@ figure.clip.static figcaption{position:static;background:var(--carbon);padding:1
 @keyframes scan{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--sh,400px));opacity:0}}
 .rig-note{margin:12px 2px 0;font-size:14px;color:var(--dim);line-height:1.5}
 .rig-note a{color:var(--neon)}
+
+/* ask-an-AI prompt */
+.ask-ai{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:28px;align-items:center;
+  border:1px dashed rgba(43,245,255,.35);border-radius:14px;padding:28px 32px;background:rgba(14,18,22,.6)}
+@media (max-width:780px){.ask-ai{grid-template-columns:1fr;padding:24px}}
+.ask-ai h3{margin:0 0 6px;font-size:22px;font-weight:720;font-variation-settings:"wdth" 110}
+.ask-ai p{margin:0;color:var(--dim);font-size:15px}
+.ask-box{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.ask-box code{display:block;width:100%;font-family:var(--mono);font-size:13.5px;line-height:1.6;color:var(--text);background:var(--void);
+  border:1px solid var(--rule);border-left:2px solid var(--neon);border-radius:6px;padding:14px 16px;user-select:all}
+.ask-copy{font:inherit;font-size:14px;font-weight:650;color:var(--void);background:var(--neon);border:0;border-radius:4px;padding:9px 16px;cursor:pointer;
+  transition:box-shadow .2s}
+.ask-copy:hover{box-shadow:0 0 22px rgba(43,245,255,.55)}
