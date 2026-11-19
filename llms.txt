@@ -1,0 +1,21 @@
+# Khushali Patel — Robotics Software Engineer
+
+> M.S. Mechanical Engineering (Robotics), San José State University, graduating May 2027. Robotics software and physical AI: manipulation, control, perception and robot learning, tested on real hardware. 3 years of test and validation engineering at John Deere; hardware-in-the-loop test automation co-op at SPAN.
+
+Portfolio: https://khushali-patel1299.github.io/
+GitHub: https://github.com/khushali-patel1299
+LinkedIn: https://www.linkedin.com/in/khushali-g-patel
+Email: khushali.patel1299@gmail.com
+
+## Case studies
+- [SO-101 robot arm: teleoperation to a learned grasp](https://khushali-patel1299.github.io/projects/so101.html): MuJoCo twin, forward kinematics, closed-form inverse kinematics with pick-and-place on the real arm, SAC grasp-and-lift policy in simulation (10/10 evaluation episodes).
+- [Paper Hands: a humanoid copies how I pick up paper](https://khushali-patel1299.github.io/projects/humanoid.html): Unitree G1 + Dex3 in MuJoCo retargets two human demonstration videos (MediaPipe, null-space IK) with fingertip touch control. Joint 5th of 19 submitted builds, Armature AI Labs Humanoid Challenge 2026; 20/20 randomized placements; 1.9 N grip vs. 16 N without touch.
+- [RGB-D person following for the Jackie service robot](https://khushali-patel1299.github.io/projects/jackie.html): MS project (in progress). Non-invasive integration with a vendor ROS1 stack; depth camera keeps a user in view at any orientation, about 2x the face camera's range.
+- [Landing a rocket four ways](https://khushali-patel1299.github.io/projects/rocket.html): PD, LQR, MPC with a hand-written ADMM QP solver, and residual SAC, in MATLAB without toolboxes. MPC lands a 10 m/s disturbed start within 2.7 mm.
+- [Computed-torque control of a 2-link arm](https://khushali-patel1299.github.io/projects/twolink.html): Lagrangian dynamics, computed torque, feedforward, trajectory filters, integral action, Cartesian tracking through IK.
+- [DC motor control](https://khushali-patel1299.github.io/projects/dcmotor.html): system identification took the model from 6.5x off to within 6% of hardware; encoder position control on Arduino.
+
+## Experience
+- SPAN: Hardware Test Intern → Co-op (May 2026–present). Python/C++ hardware-in-the-loop test frameworks; 80% less manual test time.
+- SJSU Robotics: Firmware Team Member (Apr 2026–present). Embedded C++ on STM32 for the Mars rover arm and drone telemetry.
+- John Deere India: Senior Engineer I (Jul 2022–Jul 2025). Test and validation of hydraulic and electromechanical systems; 92% less validation time.
